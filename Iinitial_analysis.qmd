@@ -1,0 +1,67 @@
+---
+title: "Oesch Coding Scheme and CES25"
+format: html
+editor: source
+---
+
+```{r}
+#| label: load-data
+
+# remotes::install_github("sjkiss/cesdata2", force=T)
+library(cesdata2)
+library(kableExtra)
+library(modelsummary)
+library(crosstable)
+library(nnet)
+library(haven)
+#data("cesdata2")
+data("ces25b")
+```
+In the module that we purchased we have `r nrow(ces25b)` respondents. Of those, we have pre-coded NOC codes for `r nrow(subset(ces25b, !is.na(NOC21_5)==T))` respondents, so we do have a sample-size issue. 
+
+We will get another 186 because there are 186 open-ended responses to the occupation question. 
+
+Oesch has multiple categorizations, but I have implemented Table 2 of [this](https://people.unil.ch/danieloesch/files/2020/11/Description_SocialClassPackage_ESS_25Nov2020.pdf)  which is an eight category scheme. The only difference that I have done is that I have just had one self-employed category.  
+
+@tbl-oesch shows the distribution of these responses.
+
+```{r}
+#| label: tbl-oesch
+#| tbl-cap: "Distribution of Oesch occupation classes"
+
+table(ces25b$occupation_oesch)
+```
+
+
+```{r}
+#| label: recodes
+
+ces25b$vote<-as_factor(ces25b$vote)
+ces25b$vote<-factor(ces25b$vote, levels=c("Conservative", "Liberal", "NDP", "Bloc", "Green", "Other"))
+
+
+ces25b$occupation_oesch<-factor(ces25b$occupation_oesch, levels=c("Production workers",
+                                         "Office clerks",
+                                         "Service workers",
+                                         "Self-employed",
+                                         "Technical Professionals",
+                                         "(Associate) Managers",
+                                         "Socio-cultural (semi) Professionals"))
+
+#Set Greens to be other
+ces25b$vote2<-car::Recode(ces25b$vote, "'Green'=NA;
+                     'Other'=NA", levels=c(  "Conservative","Liberal", "NDP", "Bloc"))
+
+```
+This is the cross-tab of vote and occupation
+
+```{r}
+#| label: tbl-vote-crosstab
+#| results: "markup"
+
+crosstable(ces25b, cols=occupation_oesch, by=vote2) %>% kable()
+
+```
+If we model vote as a function of this class, then we get this. 
+
+

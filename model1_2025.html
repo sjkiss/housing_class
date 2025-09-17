@@ -1,0 +1,183 @@
+<!-- preamble start -->
+<!DOCTYPE html> 
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinytable_mn93cebagiwnvs9thabu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+<!-- preamble end -->
+
+    <script>
+
+      function styleCell_mn93cebagiwnvs9thabu(i, j, css_id) {
+          var table = document.getElementById("tinytable_mn93cebagiwnvs9thabu");
+          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+          if (cell) {
+              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
+              cell.classList.add(css_id);
+          } else {
+              console.warn(`Cell at (${i}, ${j}) not found.`);
+          }
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_mn93cebagiwnvs9thabu');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_mn93cebagiwnvs9thabu(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_mn93cebagiwnvs9thabu");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: 10, j: 3 }, { i: 10, j: 2 }, { i: 10, j: 4 },  ], css_id: 'tinytable_css_mzupy7pipnlodhh0xscd',}, 
+          { positions: [ { i: 2, j: 2 }, { i: 4, j: 2 }, { i: 1, j: 2 }, { i: 6, j: 2 }, { i: 3, j: 2 }, { i: 8, j: 2 }, { i: 5, j: 2 }, { i: 1, j: 4 }, { i: 7, j: 2 }, { i: 1, j: 3 }, { i: 2, j: 3 }, { i: 3, j: 3 }, { i: 4, j: 3 }, { i: 5, j: 3 }, { i: 6, j: 3 }, { i: 7, j: 3 }, { i: 8, j: 3 }, { i: 9, j: 3 }, { i: 3, j: 4 }, { i: 9, j: 2 }, { i: 5, j: 4 }, { i: 2, j: 4 }, { i: 7, j: 4 }, { i: 4, j: 4 }, { i: 9, j: 4 }, { i: 6, j: 4 }, { i: 8, j: 4 },  ], css_id: 'tinytable_css_c3hjixnkeegsj83ns5i5',}, 
+          { positions: [ { i: 0, j: 2 }, { i: 0, j: 4 }, { i: 0, j: 3 },  ], css_id: 'tinytable_css_a9qe0ewser8bhov7gq3d',}, 
+          { positions: [ { i: 10, j: 0 }, { i: 10, j: 1 },  ], css_id: 'tinytable_css_9sfvqyrjotk105yt2zbt',}, 
+          { positions: [ { i: 1, j: 0 }, { i: 2, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 3, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 3, j: 1 }, { i: 7, j: 0 }, { i: 1, j: 1 }, { i: 2, j: 1 }, { i: 7, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 6, j: 1 }, { i: 8, j: 1 }, { i: 9, j: 1 },  ], css_id: 'tinytable_css_rngvfddrj9r1grb760cv',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 },  ], css_id: 'tinytable_css_j0q7q5n2xc5gnr2mtihb',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  styleCell_mn93cebagiwnvs9thabu(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <style>
+      /* tinytable css entries after */
+      .table td.tinytable_css_mzupy7pipnlodhh0xscd, .table th.tinytable_css_mzupy7pipnlodhh0xscd { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_c3hjixnkeegsj83ns5i5, .table th.tinytable_css_c3hjixnkeegsj83ns5i5 { text-align: center; }
+      .table td.tinytable_css_a9qe0ewser8bhov7gq3d, .table th.tinytable_css_a9qe0ewser8bhov7gq3d { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_9sfvqyrjotk105yt2zbt, .table th.tinytable_css_9sfvqyrjotk105yt2zbt { text-align: left; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_rngvfddrj9r1grb760cv, .table th.tinytable_css_rngvfddrj9r1grb760cv { text-align: left; }
+      .table td.tinytable_css_j0q7q5n2xc5gnr2mtihb, .table th.tinytable_css_j0q7q5n2xc5gnr2mtihb { text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+    </style>
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_mn93cebagiwnvs9thabu" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
+        <thead>
+        <caption>2025</caption>
+              <tr>
+                <th scope="col"> </th>
+                <th scope="col">  </th>
+                <th scope="col">Liberal</th>
+                <th scope="col">NDP</th>
+                <th scope="col">Bloc</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan='5'>+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td>(1)</td>
+                  <td>occupation_oesch_6Skilled Workers</td>
+                  <td>−0.03</td>
+                  <td>−0.16</td>
+                  <td>0.46</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td>(0.26)</td>
+                  <td>(0.49)</td>
+                  <td>(0.55)</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>occupation_oesch_6Semi-Professionals Associate Managers</td>
+                  <td>−0.08</td>
+                  <td>−0.04</td>
+                  <td>0.65</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td>(0.23)</td>
+                  <td>(0.42)</td>
+                  <td>(0.49)</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>occupation_oesch_6Self-employed</td>
+                  <td>−0.01</td>
+                  <td>−1.60</td>
+                  <td>0.96+</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td>(0.32)</td>
+                  <td>(1.06)</td>
+                  <td>(0.58)</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>occupation_oesch_6Professionals</td>
+                  <td>0.66**</td>
+                  <td>0.62+</td>
+                  <td>0.04</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td>(0.21)</td>
+                  <td>(0.37)</td>
+                  <td>(0.53)</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>occupation_oesch_6Managers</td>
+                  <td>0.10</td>
+                  <td>0.08</td>
+                  <td>0.01</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td>(0.23)</td>
+                  <td>(0.41)</td>
+                  <td>(0.54)</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- postamble start -->
+  </body>
+
+</html>
+<!-- postamble end -->
+<!-- hack to avoid NA insertion in last line -->
