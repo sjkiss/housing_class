@@ -69,7 +69,9 @@ ggsave("plots/figure_1_change_sub_class.png")
 
 chisq.test(table(ces$election, ces$sub_class))
 
-
+# Model subjective class on time
+mod_time<-multinom(sub_class~as.factor(election), data=ces)
+modelsummary(mod_time, stars=T, shape=model+term~response, output="model_time_subjective_class.html", fmt=2)
 # Check Class by subjective social class
 
 ces %>%
@@ -119,6 +121,17 @@ modelsummary(mod_occupation, shape=model+term~response, stars=T,
                            "as.factor(election)2025"="2025"),
              output="subjective_class_on_oesch_by_election.html")
 
-avg_predictions(mod_occupation,
-                variables=c("occupation_oesch_6", "election")) %>% data.frame() %>%
-  ggplot(., aes(y=occupation_oesch_6, x=estimate, col=election))+geom_point()+facet_grid(~group)
+dat<-expand.grid(
+  occupation_oesch_6=c("Professionals","Managers"),
+  election=factor(c(1984, 2025)),
+  sub_class=c("Lower Class", "Working Class", "Middle Class",
+              "Upper-Middle Class", "Upper Class")
+)
+
+slopes(mod_occupation, newdata=dat,
+            by=c("occupation_oesch_6", "sub_class")) %>% view()
+  ggplot(., aes(y=occupation_oesch_6, x=estimate,col=group))+
+  geom_point()+facet_grid(~election)
+
+write.csv(ces,"housing_ces.csv")
+write_dta(ces, "housing_ces.dta")
