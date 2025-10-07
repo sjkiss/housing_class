@@ -145,47 +145,22 @@ ggsave(filename=here("plots/figure_4_p_homeownership_by_age.png"), width=8, heig
 # Now check to see if home owership changes the
 mod_occupation_own_1984<-multinom(sub_class2~own_rent*age*I(age^2)*occupation_oesch_6, data=subset(ces, election==1984))
 mod_occupation_own_2025<-multinom(sub_class2~own_rent*age*I(age^2)*occupation_oesch_6, data=subset(ces, election==2025))
-ces$occupation_oesch_6
-#Generate predicted probabilities of
-avg_predictions(mod_occupation_own_1984,
-                newdata=datagrid(age=seq(25,60, by=5),
-                                 occupation_oesch_6=factor(c("Professionals", "Skilled Workers")),
-                                 own_rent=factor(c("Rent", "Own"))),
-                by=c("age", "occupation_oesch_6", "own_rent")) %>%
-  data.frame() %>% mutate(Election=1984) ->preds_1984
-  avg_predictions(mod_occupation_own_2025,
-                  newdata=datagrid(age=seq(25,60, by=5),
-                                   occupation_oesch_6=factor(c("Professionals", "Skilled Workers")),
-                                   own_rent=factor(c("Rent", "Own"))),
-                  by=c("age", "occupation_oesch_6", "own_rent")) %>%
-    data.frame() %>% mutate(Election=2025)->preds_2025
-  preds_1984 %>% bind_rows(preds_2025) %>%
-  ggplot(., aes(x=age, y=estimate, col=occupation_oesch_6, linetype=own_rent))+
-  geom_smooth(method="loess", se=F)+facet_grid(Election~fct_relevel(group, "Working Class"))
-avg_predictions(mod_occupation_own_2025,
-                newdata=datagrid(age=seq(25,60, by=5),
-                                 occupation_oesch_6=factor(c("Professionals", "Skilled Workers")),
-                                 own_rent=factor(c("Rent", "Own"))),
-                by=c("age", "occupation_oesch_6", "own_rent")) %>%
-  ggplot(., aes(x=age, y=estimate, col=occupation_oesch_6, linetype=own_rent))+
-  geom_smooth(method="loess", se=F)+facet_grid(~fct_relevel(group, "Working Class"))
-avg_comparisons(mod_occupation_own_1984,
-  newdata=datagrid(
-    age=seq(25,65, by=10),
-    occupation_oesch_6=factor(c("Professionals", "Skilled Workers")),
-    own_rent=factor(c("Rent", "Own"))), variables=c("own_rent"), by=c("age", "occupation_oesch_6")) %>%
-  ggplot(., aes(x=age, y=estimate, col=occupation_oesch_6))+
-  geom_smooth(method="loess", span=2)+
-  facet_grid(~fct_relevel(group, "Working Class"))
+summary(mod_occupation_own_1984)
 
-avg_comparisons(mod_occupation_own_2025,
-                newdata=datagrid(
-                  age=seq(25,65, by=10),
-                  occupation_oesch_6=factor(c("Professionals", "Skilled Workers")),
-                  own_rent=factor(c("Rent", "Own"))), variables=c("own_rent"), by=c("age", "occupation_oesch_6")) %>%
-  ggplot(., aes(x=age, y=estimate, col=occupation_oesch_6))+
-  geom_smooth(method="loess", span=2)+
-  facet_grid(~fct_relevel(group, "Working Class"))
+# Generate effect of ownership on subjective class without regard to age
+
+
+comparisons(mod_occupation_own_1984, variables=c("own_rent"),
+            newdata=datagrid(occupation_oesch_6=levels(ces$occupation_oesch_6), age=seq(25,55,5))) ->effects_1984
+
+effects_1984$Election<-rep(1984, nrow(effects_1984))
+comparisons(mod_occupation_own_2025, variables=c("own_rent"),
+            newdata=datagrid(occupation_oesch_6=levels(ces$occupation_oesch_6), age=seq(25,55,5))) ->effects_2025
+effects_2025$Election<-rep(2025, nrow(effects_2025))
+effects_1984 %>%
+  bind_rows(., effects_2025) %>%
+  ggplot(., aes(x=age,y=estimate, col=as.factor(Election)))+geom_smooth(method="loess", se=F)+
+  facet_grid(fct_relevel(group, "Working Class")~occupation_oesch_6)+geom_hline(yintercept=0)+theme(legend.position="bottom")
 
 write.csv(ces,"housing_ces.csv")
 write_dta(ces, "housing_ces.dta")
