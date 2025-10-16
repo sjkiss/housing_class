@@ -12,6 +12,7 @@ library(labelled)
 library(modelsummary)
 library(nnet)
 library(car)
+library(marginaleffects)
 #Load the two datasets
 data("ces25b")
 data("ces84")
@@ -20,10 +21,12 @@ names(ces25b)
 ces25b$occupation_oesch_6
 ces84$occupation_oesch_6
 ces25b$housing
-ces25b$income_tertile
+ces84$weight<-ces84$WTFACTOR
+lookfor(ces25b, "weight")
+ces25b$weight<-ces25b$cps25_weight_kiss_module
 #Make a vector of common variables
 common_vars<-c("vote", "age", "occupation_oesch_6", "own_rent", "sub_class", "election", "prov", "quebec",
-               "degree", "income_tertile", "male")
+               "degree", "income_tertile", "male", "weight")
 
 #bind the two together
 ces25b %>%
@@ -67,3 +70,8 @@ chisq.test(table(ces$election, ces$sub_class))
 
 write.csv(ces,"housing_ces.csv")
 write_dta(ces, "housing_ces.dta")
+
+#Make two different survey designs
+
+ces84_des<-as_survey_design(subset(ces, election==1984), weights=weight)
+ces25_des<-as_survey_design(subset(ces, election==2025&!is.na(weight)), weights=weight)

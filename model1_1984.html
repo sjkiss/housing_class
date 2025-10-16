@@ -1,19 +1,9 @@
 <!-- preamble start -->
-<!DOCTYPE html> 
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_qm218edy4yj6rdq1jlz8</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  </head>
-  <body>
-<!-- preamble end -->
 
     <script>
 
-      function styleCell_qm218edy4yj6rdq1jlz8(i, j, css_id) {
-          var table = document.getElementById("tinytable_qm218edy4yj6rdq1jlz8");
+      function styleCell_3a58q49wzgwcpdxs4ec2(i, j, css_id) {
+          var table = document.getElementById("tinytable_3a58q49wzgwcpdxs4ec2");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -23,7 +13,7 @@
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_qm218edy4yj6rdq1jlz8');
+        var table = document.getElementById('tinytable_3a58q49wzgwcpdxs4ec2');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -31,8 +21,8 @@
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_qm218edy4yj6rdq1jlz8(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_qm218edy4yj6rdq1jlz8");
+      function spanCell_3a58q49wzgwcpdxs4ec2(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_3a58q49wzgwcpdxs4ec2");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -62,18 +52,18 @@
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 10, j: 2 }, { i: 10, j: 3 },  ], css_id: 'tinytable_css_zdndiuzy5wfy5nt3txlx',}, 
-          { positions: [ { i: 1, j: 2 }, { i: 2, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 6, j: 2 }, { i: 3, j: 2 }, { i: 8, j: 2 }, { i: 9, j: 2 }, { i: 3, j: 3 }, { i: 7, j: 2 }, { i: 1, j: 3 }, { i: 2, j: 3 }, { i: 7, j: 3 }, { i: 4, j: 3 }, { i: 5, j: 3 }, { i: 6, j: 3 }, { i: 8, j: 3 }, { i: 9, j: 3 },  ], css_id: 'tinytable_css_lnr77cc8aimp08u8zz1m',}, 
-          { positions: [ { i: 0, j: 2 }, { i: 0, j: 3 },  ], css_id: 'tinytable_css_6exjuvnehid3qdo5ivjz',}, 
-          { positions: [ { i: 10, j: 0 }, { i: 10, j: 1 },  ], css_id: 'tinytable_css_mlnfgfuzwo5fhwr57m5i',}, 
-          { positions: [ { i: 1, j: 0 }, { i: 2, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 3, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 3, j: 1 }, { i: 7, j: 0 }, { i: 1, j: 1 }, { i: 2, j: 1 }, { i: 7, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 6, j: 1 }, { i: 8, j: 1 }, { i: 9, j: 1 },  ], css_id: 'tinytable_css_nwmu9992b9btbmq56n8x',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 },  ], css_id: 'tinytable_css_ce6i1oufnb98xp5foom7',}, 
+          { positions: [ { i: 10, j: 2 }, { i: 10, j: 3 },  ], css_id: 'tinytable_css_mi1tuch3gpf4ls506dt8',}, 
+          { positions: [ { i: 1, j: 2 }, { i: 2, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 6, j: 2 }, { i: 3, j: 2 }, { i: 8, j: 2 }, { i: 9, j: 2 }, { i: 3, j: 3 }, { i: 7, j: 2 }, { i: 1, j: 3 }, { i: 2, j: 3 }, { i: 7, j: 3 }, { i: 4, j: 3 }, { i: 5, j: 3 }, { i: 6, j: 3 }, { i: 8, j: 3 }, { i: 9, j: 3 },  ], css_id: 'tinytable_css_v35o86jttl5el6y4rp2p',}, 
+          { positions: [ { i: 0, j: 2 }, { i: 0, j: 3 },  ], css_id: 'tinytable_css_kp2ed4pda3ktl85d19ba',}, 
+          { positions: [ { i: 10, j: 0 }, { i: 10, j: 1 },  ], css_id: 'tinytable_css_uli5yo12dmm0pfuonjex',}, 
+          { positions: [ { i: 1, j: 0 }, { i: 2, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 3, j: 0 }, { i: 8, j: 0 }, { i: 9, j: 0 }, { i: 3, j: 1 }, { i: 7, j: 0 }, { i: 1, j: 1 }, { i: 2, j: 1 }, { i: 7, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 6, j: 1 }, { i: 8, j: 1 }, { i: 9, j: 1 },  ], css_id: 'tinytable_css_733mnh6yp2ompjdihp9w',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 },  ], css_id: 'tinytable_css_nnkqp7rrfvf6ulu0n1d3',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_qm218edy4yj6rdq1jlz8(cell.i, cell.j, group.css_id);
+                  styleCell_3a58q49wzgwcpdxs4ec2(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -81,15 +71,15 @@
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_zdndiuzy5wfy5nt3txlx, .table th.tinytable_css_zdndiuzy5wfy5nt3txlx { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_lnr77cc8aimp08u8zz1m, .table th.tinytable_css_lnr77cc8aimp08u8zz1m { text-align: center; }
-      .table td.tinytable_css_6exjuvnehid3qdo5ivjz, .table th.tinytable_css_6exjuvnehid3qdo5ivjz { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_mlnfgfuzwo5fhwr57m5i, .table th.tinytable_css_mlnfgfuzwo5fhwr57m5i { text-align: left; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_nwmu9992b9btbmq56n8x, .table th.tinytable_css_nwmu9992b9btbmq56n8x { text-align: left; }
-      .table td.tinytable_css_ce6i1oufnb98xp5foom7, .table th.tinytable_css_ce6i1oufnb98xp5foom7 { text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_mi1tuch3gpf4ls506dt8, .table th.tinytable_css_mi1tuch3gpf4ls506dt8 { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_v35o86jttl5el6y4rp2p, .table th.tinytable_css_v35o86jttl5el6y4rp2p { text-align: center; }
+      .table td.tinytable_css_kp2ed4pda3ktl85d19ba, .table th.tinytable_css_kp2ed4pda3ktl85d19ba { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_uli5yo12dmm0pfuonjex, .table th.tinytable_css_uli5yo12dmm0pfuonjex { text-align: left; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_733mnh6yp2ompjdihp9w, .table th.tinytable_css_733mnh6yp2ompjdihp9w { text-align: left; }
+      .table td.tinytable_css_nnkqp7rrfvf6ulu0n1d3, .table th.tinytable_css_nnkqp7rrfvf6ulu0n1d3 { text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_qm218edy4yj6rdq1jlz8" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
+      <table class="table table-borderless" id="tinytable_3a58q49wzgwcpdxs4ec2" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
         <thead>
         <caption>1984</caption>
               <tr>
@@ -164,9 +154,4 @@
         </tbody>
       </table>
     </div>
-<!-- postamble start -->
-  </body>
-
-</html>
-<!-- postamble end -->
 <!-- hack to avoid NA insertion in last line -->

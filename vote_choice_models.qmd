@@ -1,0 +1,141 @@
+---
+title: "Vote Choice, Housing and Class"
+format: html
+editor: source
+execute: 
+  warning: false
+  message: false
+  echo: false
+  output: false
+  cache: false
+---
+
+
+```{r}
+#| label: setup
+
+
+source("3_model_votechoice.R")
+theme_set(theme_minimal(base_size=12))
+```
+
+
+```{r}
+#| label: fig-social-class
+#| output: true
+#| fig-width: 4
+#| fig-height: 3
+ces84_des %>% 
+  group_by(sub_class2) %>% 
+  filter(!is.na(sub_class2)) %>% 
+  summarise(survey_prop()) %>% 
+  mutate(election=rep(1984, nrow(.)))->ces84_sub_class
+ces25_des %>% 
+  group_by(sub_class2) %>% 
+  filter(!is.na(sub_class2)) %>% 
+  summarise(survey_prop()) %>% 
+    mutate(election=rep(2025, nrow(.)))->ces25_sub_class
+           
+ces84_sub_class %>%
+  bind_rows(ces25_sub_class) %>% rename("pct"="coef", "se"="_se") %>% 
+  ggplot(., aes(y=fct_relevel(sub_class2, "Working Class"), fill=factor(election, levels=c("1984", "2025")), x=pct))+
+  geom_col( position=position_dodge())+
+    geom_linerange(aes(xmin=pct+(1.96*se), xmax=pct+(1.96*se)))+
+  scale_fill_manual(values=c("black", "lightgrey"))+
+  labs(x="Percent", y="Subjective Social Class", fill="Election", title="Distribution of Subjective Social Class, 1984 and 2025")
+
+```
+All these are multinomial logistic regression models that have vote as the dependent variable. They only include ROC voters. It's already complicated enough as it is. Conservatives are the reference category. That means that a positive coefficient means that the variable in the row increases the probability that a voter chose the Liberals (NDP) over the Conservatives. A negative coeffficient means that the variable decreases the likelihood that a voter choose the Liberals (NDP) over the Conservatives. 
+
+Note that contrary to Oesch's 6 category scheme that we had started with, I decided to collapse skilled and unskilled working classes. This way it is easier to tease out class voting that is consistent with what we found before. 
+ @tbl-1984-models is 1984. 
+
+
+```{r}
+#| label: vector-rename
+# this creates a vector of renaming labels
+rename_vector<-c("sub_class2Working Class"="Working Class",
+                           "sub_class2Upper Class"="Uppper Class",
+                           "occupation_oesch_6_2Semi-Professionals Associate Managers"="Oesch\nSemi Professionals",
+                           "occupation_oesch_6_2Self-employed"="Oesch\nSelf-employed",
+                           "occupation_oesch_6_2Professionals"="Oesch\nProfessionals",
+                           "occupation_oesch_6_2Managers"="Managers",
+                           "as_factor(degree)degree"="Degree",
+                           "own_rentOwn:sub_class2Working Class"="Own x Subjective Working class",
+                           "own_rentOwn:sub_class2Upper Class"="Own x Subjective Upper class")
+```
+```{r}
+#| label: tbl-1984-models
+#| tbl-cap: Vote choice in 1984
+#| output: true
+
+modelsummary(roc_list_84,
+             stars=T,
+             fmt=2,
+             shape=term~model+response, output="gt", 
+             coef_rename=rename_vector)
+```
+
+
+There are four findings I want to point out in 1984.
+
+1. There is no ownership cleavage, basically. 
+2. There is a nice bit of class voting that shows that the semi-professionals are less likely than workers to vote for the Liberals or the NDP. That is our class voting bit. Note also managers are more likely than workers to vote for the Liberals. Note also the absence of a professional class cleavage. That's also consistent with what we have been talking about. \
+3. In model 4, there are significant interactions for subjective social class and home hownership. 
+  - Owning and thinking you are working class make you *less* likely to vote for the Liberals
+  - Owning and thinking you are upper class make you *more* likely to vote for the Liberals
+  - It is the same for the NDP except that owning and working class make you *more* likely to vote for the NDP.
+  
+*Bottom line subjective social class interacted with home ownership in shaping vote choice. Maybe vote choice drives subjective social class though too*.
+
+
+
+Then in @tbl-2025-models we get the same models but for 2025. 
+
+```{r}
+#| label: tbl-2025-models
+#| output: true
+#| tbl-cap: Vote Choice in 2025
+#| 
+modelsummary(roc_list_25,
+             stars=T,
+             fmt=2,
+             shape=term~model+response, title="2025", output="gt", coef_rename=rename_vector)
+```
+
+There are three things I want to point out here. 
+
+1. *There is an ownership cleavage now, in the direction that Matt has pointed out*. Owners are objectively more likely to vote for the Conservatives. 
+2. There is still a subjective social class that is about stable from 1984
+3.there is a *larger* interaction between upper social class and ownership status. 
+
+I tried to visualize this here. This shows effect of ownership status on the probability of voting for each party by subjective social class in 1984 and 2025. So it shows the *change* in probability moving from being a renter to being an owners holding all those controls constant. 
+
+```{r}
+#| label: fig-subjective-class-ownership
+#| fig-cap: Effect of ownership status on vote choice in 1984 and 2025
+#| output: true
+#| fig-height: 4
+#| fig-width: 6
+model4_list %>%
+  map(., avg_comparisons, variables=c("own_rent"), by=c("sub_class2")) %>%
+  list_rbind(., names_to=c('Election')) %>%
+  #filter(group!="NDP") %>%
+  ggplot(., aes(y=group, x=estimate, col=group, alpha=Election))+geom_pointrange(aes(xmin=conf.low, xmax=conf.high))+facet_grid(~fct_relevel(sub_class2, "Working Class"))+
+  scale_color_manual(values=c("darkblue",  "darkred", "orange"))+geom_vline(xintercept=0, linetype=2)
+
+```
+
+This brings out some interesting information. 
+
+1. **For working class voters** - there was *no* effect of housing status on vote choice in 1984 for working class voters. 
+2. **For middle class voters** - there was a very mild effect in 1984 where owners were 10 percent more likely to vote Liberal than others. But in 2025, homeowners were 10 percent *less* likely to vote Liberal 10 perent *more* likely to vote Conservative.
+3. **for upper class voters** - owning a home increased the probability of voting for the Liberals by about 10 percent in 1984 and it reduced the probability of voting for the Conservatives in 2025. 
+
+Questions:
+
+1. What does the literature say on what subjective social class actually does or adds to this equation? What goes into it? 
+2. What xplains the big changes in housing status effects on vote choice for middle class and working class voters while for upper class voters, home ownership status is stable. 
+
+
+
