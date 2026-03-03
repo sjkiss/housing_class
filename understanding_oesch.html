@@ -1,0 +1,2269 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Understanding Oesch</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="understanding_oesch_files/libs/clipboard/clipboard.min.js"></script>
+<script src="understanding_oesch_files/libs/quarto-html/quarto.js"></script>
+<script src="understanding_oesch_files/libs/quarto-html/popper.min.js"></script>
+<script src="understanding_oesch_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="understanding_oesch_files/libs/quarto-html/anchor.min.js"></script>
+<link href="understanding_oesch_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="understanding_oesch_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="understanding_oesch_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="understanding_oesch_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="understanding_oesch_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Understanding Oesch</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="section" class="level2">
+<h2 class="anchored" data-anchor-id="section"></h2>
+<p>This is implementation of the Oesch 16-class categorization, where I have lumped all the self-employed together. He distinguishes those.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 59%">
+<col style="width: 4%">
+<col style="width: 22%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">occupation_name</th>
+<th style="text-align: right;">NOC21_5</th>
+<th style="text-align: left;">occupation_oesch</th>
+<th style="text-align: left;">occupation_oesch_5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Photographer</td>
+<td style="text-align: right;">53110</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bed and breakfast operator</td>
+<td style="text-align: right;">60031</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Chiropraticien/chiropraticienne</td>
+<td style="text-align: right;">31201</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Coordonnateur/coordonnatrice des soins infirmiers aux patients</td>
+<td style="text-align: right;">31300</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Certified translator (C.Tr.)</td>
+<td style="text-align: right;">51114</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Anthropology professor - university</td>
+<td style="text-align: right;">41200</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Early childhood education instructor - college level</td>
+<td style="text-align: right;">41210</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">School counsellor</td>
+<td style="text-align: right;">41320</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Carpenter rough</td>
+<td style="text-align: right;">72310</td>
+<td style="text-align: left;">Skilled manual</td>
+<td style="text-align: left;">Skilled workers</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Baker</td>
+<td style="text-align: right;">63202</td>
+<td style="text-align: left;">Skilled manual</td>
+<td style="text-align: left;">Skilled workers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tradesman/woman cabinetmaker</td>
+<td style="text-align: right;">72311</td>
+<td style="text-align: left;">Skilled manual</td>
+<td style="text-align: left;">Skilled workers</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Carpenter lead hand</td>
+<td style="text-align: right;">72310</td>
+<td style="text-align: left;">Skilled manual</td>
+<td style="text-align: left;">Skilled workers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Baker - retail</td>
+<td style="text-align: right;">63202</td>
+<td style="text-align: left;">Skilled manual</td>
+<td style="text-align: left;">Skilled workers</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Information technology (IT) business analyst</td>
+<td style="text-align: right;">21221</td>
+<td style="text-align: left;">Technical experts</td>
+<td style="text-align: left;">Higher-grade service</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mechanical engineer</td>
+<td style="text-align: right;">21301</td>
+<td style="text-align: left;">Technical experts</td>
+<td style="text-align: left;">Higher-grade service</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Medical engineering biophysicist</td>
+<td style="text-align: right;">21100</td>
+<td style="text-align: left;">Technical experts</td>
+<td style="text-align: left;">Higher-grade service</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">City planner - land use</td>
+<td style="text-align: right;">21202</td>
+<td style="text-align: left;">Technical experts</td>
+<td style="text-align: left;">Higher-grade service</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ingénieur/ingénieure de bâtiments et de ponts</td>
+<td style="text-align: right;">21300</td>
+<td style="text-align: left;">Technical experts</td>
+<td style="text-align: left;">Higher-grade service</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Administrative assistant - office</td>
+<td style="text-align: right;">13110</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dental office receptionist</td>
+<td style="text-align: right;">14101</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Dental office receptionist</td>
+<td style="text-align: right;">14101</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Engineering clerk</td>
+<td style="text-align: right;">14301</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Executive assistant</td>
+<td style="text-align: right;">12100</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Financial planning and analysis manager</td>
+<td style="text-align: right;">10010</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Analyst-accountant</td>
+<td style="text-align: right;">11100</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Directeur administratif/directrice administrative de compagnie de gestion immobilière</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lawyer</td>
+<td style="text-align: right;">41101</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">General manager - health, education, social and community services and membership organizations</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Éducateur/éducatrice en milieu pédiatrique</td>
+<td style="text-align: right;">42201</td>
+<td style="text-align: left;">Socio-cultural (semi-professionals)</td>
+<td style="text-align: left;">Lower-grade service</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Emergency medical technician - paramedic/advanced care paramedic (EMT - P/ACP)</td>
+<td style="text-align: right;">32102</td>
+<td style="text-align: left;">Socio-cultural (semi-professionals)</td>
+<td style="text-align: left;">Lower-grade service</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Travailleur social agréé/travailleuse sociale agréée</td>
+<td style="text-align: right;">41300</td>
+<td style="text-align: left;">Socio-cultural (semi-professionals)</td>
+<td style="text-align: left;">Lower-grade service</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Registered social worker</td>
+<td style="text-align: right;">41300</td>
+<td style="text-align: left;">Socio-cultural (semi-professionals)</td>
+<td style="text-align: left;">Lower-grade service</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Registered practical nurse (R.P.N.)</td>
+<td style="text-align: right;">32101</td>
+<td style="text-align: left;">Socio-cultural (semi-professionals)</td>
+<td style="text-align: left;">Lower-grade service</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Construction trades helper</td>
+<td style="text-align: right;">75110</td>
+<td style="text-align: left;">Low-skilled manual</td>
+<td style="text-align: left;">Unskilled workers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Torréfieur/torréfieuse de café</td>
+<td style="text-align: right;">94140</td>
+<td style="text-align: left;">Low-skilled manual</td>
+<td style="text-align: left;">Unskilled workers</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ouvrier/ouvrière d’entrepôt - manutention</td>
+<td style="text-align: right;">75101</td>
+<td style="text-align: left;">Low-skilled manual</td>
+<td style="text-align: left;">Unskilled workers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Manoeuvre municipal/manoeuvre municipale</td>
+<td style="text-align: right;">75212</td>
+<td style="text-align: left;">Low-skilled manual</td>
+<td style="text-align: left;">Unskilled workers</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Construction labourer</td>
+<td style="text-align: right;">75110</td>
+<td style="text-align: left;">Low-skilled manual</td>
+<td style="text-align: left;">Unskilled workers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Customer service manager - retail</td>
+<td style="text-align: right;">60020</td>
+<td style="text-align: left;">Lower-grade managers</td>
+<td style="text-align: left;">Lower-grade service</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Government supply officer</td>
+<td style="text-align: right;">12102</td>
+<td style="text-align: left;">Lower-grade managers</td>
+<td style="text-align: left;">Lower-grade service</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Retirement home manager</td>
+<td style="text-align: right;">60031</td>
+<td style="text-align: left;">Lower-grade managers</td>
+<td style="text-align: left;">Lower-grade service</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Customer service managing supervisor</td>
+<td style="text-align: right;">60020</td>
+<td style="text-align: left;">Lower-grade managers</td>
+<td style="text-align: left;">Lower-grade service</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Clothing store manager</td>
+<td style="text-align: right;">60020</td>
+<td style="text-align: left;">Lower-grade managers</td>
+<td style="text-align: left;">Lower-grade service</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Janitor</td>
+<td style="text-align: right;">65312</td>
+<td style="text-align: left;">Unskilled clerks</td>
+<td style="text-align: left;">Unskilled workers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Courier</td>
+<td style="text-align: right;">74102</td>
+<td style="text-align: left;">Unskilled clerks</td>
+<td style="text-align: left;">Unskilled workers</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Coupeur/coupeuse de portions de viande - commerce de gros ou de détail</td>
+<td style="text-align: right;">65202</td>
+<td style="text-align: left;">Unskilled clerks</td>
+<td style="text-align: left;">Unskilled workers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Banquet porter</td>
+<td style="text-align: right;">65210</td>
+<td style="text-align: left;">Unskilled clerks</td>
+<td style="text-align: left;">Unskilled workers</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Caissier/caissière - commerce de détail et de gros</td>
+<td style="text-align: right;">65100</td>
+<td style="text-align: left;">Unskilled clerks</td>
+<td style="text-align: left;">Unskilled workers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Customer service sales clerk</td>
+<td style="text-align: right;">64100</td>
+<td style="text-align: left;">Skilled service</td>
+<td style="text-align: left;">Skilled workers</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aircraft flight attendant</td>
+<td style="text-align: right;">64311</td>
+<td style="text-align: left;">Skilled service</td>
+<td style="text-align: left;">Skilled workers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Libraire</td>
+<td style="text-align: right;">64100</td>
+<td style="text-align: left;">Skilled service</td>
+<td style="text-align: left;">Skilled workers</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Conseiller/conseillère en vente au détail</td>
+<td style="text-align: right;">64100</td>
+<td style="text-align: left;">Skilled service</td>
+<td style="text-align: left;">Skilled workers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Driver’s licence examiner</td>
+<td style="text-align: right;">43109</td>
+<td style="text-align: left;">Skilled service</td>
+<td style="text-align: left;">Skilled workers</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Building cleaning and maintenance supervisor</td>
+<td style="text-align: right;">62024</td>
+<td style="text-align: left;">Low-skilled service</td>
+<td style="text-align: left;">Unskilled workers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Head custodian - cleaning services</td>
+<td style="text-align: right;">62024</td>
+<td style="text-align: left;">Low-skilled service</td>
+<td style="text-align: left;">Unskilled workers</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Delivery driver</td>
+<td style="text-align: right;">75201</td>
+<td style="text-align: left;">Low-skilled service</td>
+<td style="text-align: left;">Unskilled workers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Head custodian - cleaning services</td>
+<td style="text-align: right;">62024</td>
+<td style="text-align: left;">Low-skilled service</td>
+<td style="text-align: left;">Unskilled workers</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Serveur/serveuse de bar</td>
+<td style="text-align: right;">64301</td>
+<td style="text-align: left;">Low-skilled service</td>
+<td style="text-align: left;">Unskilled workers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Automation technician</td>
+<td style="text-align: right;">22301</td>
+<td style="text-align: left;">Technicians</td>
+<td style="text-align: left;">Lower-grade service</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fire alarm technician</td>
+<td style="text-align: right;">22311</td>
+<td style="text-align: left;">Technicians</td>
+<td style="text-align: left;">Lower-grade service</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Geological engineering technician</td>
+<td style="text-align: right;">22101</td>
+<td style="text-align: left;">Technicians</td>
+<td style="text-align: left;">Lower-grade service</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Technicien/technicienne de dossiers médicaux</td>
+<td style="text-align: right;">12111</td>
+<td style="text-align: left;">Technicians</td>
+<td style="text-align: left;">Lower-grade service</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Contremaître/contremaîtresse de carreleurs</td>
+<td style="text-align: right;">72014</td>
+<td style="text-align: left;">Technicians</td>
+<td style="text-align: left;">Lower-grade service</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>This is the distribution of respondents on that schema..</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">occupation_oesch</th>
+<th style="text-align: right;">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">177</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Technical experts</td>
+<td style="text-align: right;">48</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Technicians</td>
+<td style="text-align: right;">35</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Skilled manual</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Low-skilled manual</td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: right;">243</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lower-grade managers</td>
+<td style="text-align: right;">46</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: right;">119</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Unskilled clerks</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: right;">86</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Socio-cultural (semi-professionals)</td>
+<td style="text-align: right;">52</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Skilled service</td>
+<td style="text-align: right;">54</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Low-skilled service</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">1954</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Ths is the distribution of employment status.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">cps25_employment</th>
+<th style="text-align: right;">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Working for pay full-time</td>
+<td style="text-align: right;">1198</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Working for pay part-time</td>
+<td style="text-align: right;">221</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Self employed (with or without employees)</td>
+<td style="text-align: right;">177</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Retired</td>
+<td style="text-align: right;">749</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Unemployed/ looking for work</td>
+<td style="text-align: right;">121</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Student</td>
+<td style="text-align: right;">111</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Caring for a family</td>
+<td style="text-align: right;">51</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Disabled</td>
+<td style="text-align: right;">100</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Student and working for pay</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Caring for family and working for pay</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Retired and working for pay</td>
+<td style="text-align: right;">43</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Other (please specify)</td>
+<td style="text-align: right;">37</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Don’t know/ Prefer not to answer</td>
+<td style="text-align: right;">30</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 61%">
+<col style="width: 21%">
+<col style="width: 12%">
+<col style="width: 4%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">occupation_name</th>
+<th style="text-align: left;">occupation_oesch</th>
+<th style="text-align: left;">occupation_oesch_5</th>
+<th style="text-align: right;">NOC21_5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Non-technical project manager</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">13100</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Professional association executive director</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Marketing manager</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">10022</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Accounting assistant</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">14200</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dog kennel manager</td>
+<td style="text-align: left;">Lower-grade managers</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">60040</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Medical secretary</td>
+<td style="text-align: left;">Socio-cultural (semi-professionals)</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">13112</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Retail store owner</td>
+<td style="text-align: left;">Lower-grade managers</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">60020</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Entraîneur athlétique/entraîneuse athlétique - thérapie</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">31204</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nurse - team leader</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">31300</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Business education teacher</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">41220</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Special education assistant</td>
+<td style="text-align: left;">Skilled service</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">43100</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Clothing store manager</td>
+<td style="text-align: left;">Lower-grade managers</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">60020</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Administrateur/administratrice de haute direction - fonction publique</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Social science statistician</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">21210</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sales manager (except retail and wholesale)</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">60010</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Inhalothérapeute</td>
+<td style="text-align: left;">Socio-cultural (semi-professionals)</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">32103</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">General manager - health, education, social and community services and membership organizations</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Engineering vice-president - financial, communications and other business services</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Enseignant/enseignante au niveau primaire</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">41221</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">General manager - government services</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Chiropraticien/chiropraticienne</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">31201</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Analyste principal/analyste principale en comptabilité</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">11100</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Information technology (IT) business analyst</td>
+<td style="text-align: left;">Technical experts</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">21221</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">French as a second language teacher (except elementary, high school or university)</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">41210</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Commissaire à la santé</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Analyst-accountant</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">11100</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Enseignant/enseignante en adaptation scolaire au niveau secondaire</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">41220</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lawyer</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">41101</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Internal audit supervisor - finances</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">11100</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Graphic designer</td>
+<td style="text-align: left;">Socio-cultural (semi-professionals)</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">52120</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Human resources administrator</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">13110</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Retail merchandiser</td>
+<td style="text-align: left;">Lower-grade managers</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">62101</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Media relations director</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">10022</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Chef de direction - services financiers, communications et autres services aux entreprises</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Chauffeur/chauffeuse de camion à ordures</td>
+<td style="text-align: left;">Low-skilled manual</td>
+<td style="text-align: left;">Unskilled workers</td>
+<td style="text-align: right;">74205</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Baker</td>
+<td style="text-align: left;">Skilled manual</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">63202</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Chief administrative officer - government services</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Personnel supervisor</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">12101</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Laboratory demonstrator - post-secondary teaching assistance</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">41201</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Construction project coordinator</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">70010</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Personal support aide - home aide</td>
+<td style="text-align: left;">Low-skilled service</td>
+<td style="text-align: left;">Unskilled workers</td>
+<td style="text-align: right;">44101</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Registered nurse - public and community health</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">31301</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Préposé médical/préposée médicale - transfert des patients</td>
+<td style="text-align: left;">Skilled service</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">33102</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Property assessor</td>
+<td style="text-align: left;">Lower-grade managers</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">12203</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Teacher - teacher’s college</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">41200</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Adjoint administratif/adjointe administrative</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">13110</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Analyste fonctionnel/analyste fonctionnelle en informatique</td>
+<td style="text-align: left;">Technical experts</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">21221</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Senior accounting analyst</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">11100</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Frozen food packer</td>
+<td style="text-align: left;">Low-skilled manual</td>
+<td style="text-align: left;">Unskilled workers</td>
+<td style="text-align: right;">95106</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Records management services manager</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">10019</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Administrative technician</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">13100</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bedside nurse</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">31301</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Registered social service worker</td>
+<td style="text-align: left;">Socio-cultural (semi-professionals)</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">42201</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Advertising copywriter</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">51111</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Executive general manager - health, education, social and community services and membership organizations</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pharmacologist</td>
+<td style="text-align: left;">Technical experts</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">21110</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Paralegal</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">42200</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Judge - law</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">41100</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Social media community manager</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">10022</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Caissier/caissière - commerce de détail et de gros</td>
+<td style="text-align: left;">Unskilled clerks</td>
+<td style="text-align: left;">Unskilled workers</td>
+<td style="text-align: right;">65100</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Horseback riding instructor</td>
+<td style="text-align: left;">Skilled service</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">54100</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Éducateur/éducatrice de la petite enfance</td>
+<td style="text-align: left;">Socio-cultural (semi-professionals)</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">42202</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cashier supervisor - retail</td>
+<td style="text-align: left;">Skilled service</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">62010</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Vocational counsellor (except education)</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">41321</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Customer service supervisor - retail</td>
+<td style="text-align: left;">Skilled service</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">62010</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Commis-vendeur/commis-vendeuse de pièces automobiles au comptoir - commerce de détail</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">14401</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Health care aide</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">33102</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Computer audit specialist</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">11100</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Marble carver - concrete, clay and stone forming</td>
+<td style="text-align: left;">Low-skilled manual</td>
+<td style="text-align: left;">Unskilled workers</td>
+<td style="text-align: right;">94103</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bank teller</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">64400</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Registered nurse (R.N.)</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">31301</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Assistant executive director - financial, communications and other business services</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Finance director</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">10010</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Personal investment advisor</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">11102</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Access to information and privacy officer</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">13100</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Infirmier technicien/infirmière technicienne</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">31301</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mechanical engineer</td>
+<td style="text-align: left;">Technical experts</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">21301</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Technologue agricole</td>
+<td style="text-align: left;">Technicians</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">22110</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Registered nurse (R.N.)</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">31301</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Support services manager</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">10019</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Landscaper</td>
+<td style="text-align: left;">Technicians</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">22114</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Chief administrative officer - government services</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Computer systems manager</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">20012</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Manufacturing company chief executive officer</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Chemical spectroscopist</td>
+<td style="text-align: left;">Technical experts</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">21101</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Computer software engineer</td>
+<td style="text-align: left;">Technical experts</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">21231</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Agent/agente de soutien à la recherche</td>
+<td style="text-align: left;">Lower-grade managers</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">12113</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Carpenter lead hand</td>
+<td style="text-align: left;">Skilled manual</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">72310</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Registered social worker</td>
+<td style="text-align: left;">Socio-cultural (semi-professionals)</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">41300</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Business consultant</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">11201</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Building construction general manager</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Driver’s licence examiner</td>
+<td style="text-align: left;">Skilled service</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">43109</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Office manager</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">13100</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Facteur/factrice</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">74101</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aide-éducateur/aide-éducatrice de la petite enfance</td>
+<td style="text-align: left;">Socio-cultural (semi-professionals)</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">42202</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Office manager</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">13100</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Facteur/factrice</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">74101</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">City manager</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Retail sales associate</td>
+<td style="text-align: left;">Skilled service</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">64100</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Trucking company general manager</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Construction superintendent</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">70010</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Administrative manager</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">10019</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Retail sales representative</td>
+<td style="text-align: left;">Skilled service</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">64100</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">City councilman/woman</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Accounting and financial control chief</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">10010</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Registered nurse (R.N.)</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">31301</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Secrétaire administratif/secrétaire administrative</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">13110</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dentiste</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">31110</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sterile processing technician</td>
+<td style="text-align: left;">Skilled service</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">33109</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Administrative assistant</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">13110</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">3D animation artist</td>
+<td style="text-align: left;">Socio-cultural (semi-professionals)</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">52120</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Graphic artist</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">52120</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Office administrator</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">13100</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Éducateur/éducatrice à la prématernelle</td>
+<td style="text-align: left;">Socio-cultural (semi-professionals)</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">42202</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Assistant bar manager</td>
+<td style="text-align: left;">Lower-grade managers</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">60030</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sales and marketing director</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">10022</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sales general manager - trade, broadcasting and other services</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Manufacturing company manager</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">90010</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Software engineer</td>
+<td style="text-align: left;">Technical experts</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">21231</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Electrical engineering manager</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">20010</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Executive administrator - government agency</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Head nurse</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">31300</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Libraire</td>
+<td style="text-align: left;">Skilled service</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">64100</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Correctional program officer</td>
+<td style="text-align: left;">Socio-cultural (semi-professionals)</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">42201</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Warehouse clerk - parts and equipment</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">14401</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Medical radiation technologist (MRT)</td>
+<td style="text-align: left;">Technicians</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">32121</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sales broker - wholesale</td>
+<td style="text-align: left;">Lower-grade managers</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">62100</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Elementary school teacher</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">41221</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Analyste d’affaires en technologie de l’information (TI)</td>
+<td style="text-align: left;">Technical experts</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">21221</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Optometrist</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">31111</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Data scientist</td>
+<td style="text-align: left;">Technical experts</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">21211</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Court clerk</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">14103</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">General office worker</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">14100</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Commercial vehicle driver instructor</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">41210</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Commis comptable</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">14200</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Education director</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">40012</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">English professor - university</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">41200</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Forklift operator</td>
+<td style="text-align: left;">Low-skilled manual</td>
+<td style="text-align: left;">Unskilled workers</td>
+<td style="text-align: right;">75101</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Journalist</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">51113</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Civil engineering technologist</td>
+<td style="text-align: left;">Technicians</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">22300</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Enseignant/enseignante au niveau secondaire</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">41220</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">General secretary - government services</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Software developer</td>
+<td style="text-align: left;">Technical experts</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">21232</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Employment insurance commissioner</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Contractor-electrician</td>
+<td style="text-align: left;">Technicians</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">72011</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Construction general manager</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Technical writer</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">51112</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Accounting department manager</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">10010</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Concepteur/conceptrice de sites Web</td>
+<td style="text-align: left;">Technical experts</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">21233</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Content creator - writing</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">51111</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Advanced life support paramedic</td>
+<td style="text-align: left;">Socio-cultural (semi-professionals)</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">32102</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Health care aide</td>
+<td style="text-align: left;">Skilled service</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">33102</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Directeur/directrice de la comptabilité</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">10010</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Head janitor</td>
+<td style="text-align: left;">Low-skilled service</td>
+<td style="text-align: left;">Unskilled workers</td>
+<td style="text-align: right;">62024</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Residential property manager</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">13101</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Technicien/technicienne en documentation</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">12112</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Financial administrator</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">10010</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Journaliste</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">51113</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Analyste en exploration de données</td>
+<td style="text-align: left;">Technical experts</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">21211</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Category purchasing manager</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">10012</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Data control supervisor</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">12010</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mechanical engineering manager</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">20010</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Non-technical project manager</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">13100</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Reception desk clerk (except hotel)</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">14101</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Early childhood education instructor - college level</td>
+<td style="text-align: left;">Socio-cultural professionals</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">41210</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Retail store owner</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">60020</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Retail salesperson</td>
+<td style="text-align: left;">Skilled service</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">64100</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Technicien/technicienne de dossiers médicaux</td>
+<td style="text-align: left;">Technicians</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">12111</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cashier</td>
+<td style="text-align: left;">Unskilled clerks</td>
+<td style="text-align: left;">Unskilled workers</td>
+<td style="text-align: right;">65100</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Engineering manager</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">20010</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Librarian</td>
+<td style="text-align: left;">Socio-cultural (semi-professionals)</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">51100</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Artist</td>
+<td style="text-align: left;">Socio-cultural (semi-professionals)</td>
+<td style="text-align: left;">Lower-grade service</td>
+<td style="text-align: right;">53122</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Medical receptionist</td>
+<td style="text-align: left;">Skilled clerks</td>
+<td style="text-align: left;">Skilled workers</td>
+<td style="text-align: right;">14101</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Computer software engineer</td>
+<td style="text-align: left;">Technical experts</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">21231</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Accounting director</td>
+<td style="text-align: left;">Higher-grade managers</td>
+<td style="text-align: left;">Higher-grade service</td>
+<td style="text-align: right;">10010</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Agricultural consultant</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">21112</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: left;">Self-employed</td>
+<td style="text-align: right;">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

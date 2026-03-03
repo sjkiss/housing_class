@@ -14,8 +14,7 @@ library(modelsummary)
 library(crosstable)
 library(nnet)
 library(haven)
-#data("cesdata2")
-data("ces25b")
+source("1_housing_class_master.R")
 ```
 In the module that we purchased we have `r nrow(ces25b)` respondents. Of those, we have pre-coded NOC codes for `r nrow(subset(ces25b, !is.na(NOC21_5)==T))` respondents, so we do have a sample-size issue. 
 
@@ -28,8 +27,9 @@ Oesch has multiple categorizations, but I have implemented Table 2 of [this](htt
 ```{r}
 #| label: tbl-oesch
 #| tbl-cap: "Distribution of Oesch occupation classes"
+library(janitor)
+tabyl(ces,  occupation_oesch, election)
 
-table(ces25b$occupation_oesch)
 ```
 
 

@@ -1,0 +1,70 @@
+---
+title: "Does Housing Ownership Increase Subjective Social Class"
+format: html
+knitr:
+  opts_chunk:
+    fig.path: "figures/prefix-" 
+editor: visual
+execute: 
+  warning: false
+  message: false
+  echo: false
+  output: false
+---
+
+```{r}
+#| label: setup
+source("1_housing_class_master.R")
+```
+
+```{r}
+#| label: model1
+# Now check to see if home owership changes the sense of subjective class
+mod_occupation_own_controls_1984<-multinom(sub_class2~degree+income_tertile+own_rent+age+I(age^2)+occupation_oesch_5, data=subset(ces, election==1984))
+mod_occupation_own_1984<-update(mod_occupation_own_controls_1984, .~own_rent)
+mod_occupation_own_controls_2025<-multinom(sub_class2~degree+income_tertile+own_rent+age+I(age^2)+occupation_oesch_5, data=subset(ces, election==2025))
+mod_occupation_own_2025<-update(mod_occupation_own_controls_2025, .~own_rent)
+mod_occupation_own_list<-list(
+"1984: Ownership"=mod_occupation_own_1984, "1984: Ownership+controls"=mod_occupation_own_controls_1984, "2025: Ownership"=mod_occupation_own_2025,"2025: Ownership+controls"=mod_occupation_own_controls_2025
+)
+modelsummary(mod_occupation_own_list, stars=T,  shape=term~model+response,fmt=2)
+
+```
+
+```{r}
+#| label: interaction-models
+mod_occupation_by_own_1984<-update(mod_occupation_own_controls_1984, .~.+occupation_oesch_5:own_rent)
+
+mod_occupation_by_own_2025<-update(mod_occupation_own_controls_2025, .~.+occupation_oesch_5:own_rent)
+mod_occupation_by_own_list<-list(mod_occupation_by_own_1984,mod_occupation_by_own_2025)
+modelsummary(mod_occupation_by_own_list, stars=T,  shape=term~model+response,fmt=2)
+
+```
+
+We can visualize these this way.
+
+```{r}
+#| label: visualize
+ces %>% 
+  select(election, sub_class2, own_rent) %>% 
+  count(election, own_rent, sub_class2) %>% 
+  group_by(election, own_rent) %>% 
+  mutate(pct=n/sum(n)) %>% 
+  filter(!is.na(sub_class2)) %>% 
+    filter(own_rent=="Own") %>% 
+  ggplot(., aes(x=pct, y=fct_relevel(sub_class2, "Working Class"), fill=fct_relevel(election, "2025", "1984")))+geom_col(position="dodge")+labs(fill="Election", x="Percent", y="Subjective Social Class")+theme_minimal()+
+  guides(fill=guide_legend(reverse=T))+scale_fill_grey(start=0.8, end=0.2)
+```
+```{r}
+#| label: effects-home-ownership
+library(marginaleffects) 
+avg_slopes(mod_occupation_by_own_1984, variables="own_rent", by=c("occupation_oesch_5")) %>%    mutate(Year=rep("1984", nrow(.)))->own_effects_class_1984 
+avg_slopes(mod_occupation_by_own_2025, variables="own_rent", by=c("occupation_oesch_5")) %>%      mutate(Year=rep("2025", nrow(.)))->own_effects_class_2025 
+
+own_effects_class_1984 %>%    
+  bind_rows(own_effects_class_2025)->own_effects_class 
+own_effects_class %>%    
+  #filter(group!="Upper Class") %>%    
+ggplot(., aes(x=estimate, y=occupation_oesch_5, col=Year))+facet_wrap(~fct_relevel(group, "Working Class"))+   geom_pointrange(aes(xmin=conf.low, xmax=conf.high))+   theme_minimal()+   scale_color_grey()
+```
+

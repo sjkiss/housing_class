@@ -16,10 +16,31 @@ execute:
 ```{r}
 #| label: setup
 
-source("3_model_votechoice.R")
+
+source("3_model_votechoice_occupation_oesch_5.R")
 theme_set(theme_minimal(base_size=12))
 ```
 
+```{r}
+#| label: missing-occupation-values
+#| output: true
+#install.packages("DT")
+library(DT)
+ces25b %>% 
+  count(cps25_employment,occupation_oesch_5) %>% as_factor() %>% 
+  datatable()
+```
+```{r}
+
+
+ces25b %>% 
+  count(occupation_oesch_5) %>% as_factor()
+nrow(ces25b)-1805
+ces84 %>% 
+  count(occupation_oesch_5) %>% as_factor()
+nrow(ces84)
+nrow(ces25b)
+```
 
 ```{r}
 #| label: fig-social-class
@@ -109,7 +130,7 @@ modelsummary(roc_list_25,
 There are three things I want to point out here. 
 
 1. *There is an ownership cleavage now, in the direction that Matt has pointed out*. Owners are objectively more likely to vote for the Conservatives. 
-2. There is still a subjective social class that is about stable from 1984
+2. There is still a subjective social class that is about stable from 1984.  
 3.there is a *larger* interaction between upper social class and ownership status. 
 
 I tried to visualize this here. This shows effect of ownership status on the probability of voting for each party by subjective social class in 1984 and 2025. So it shows the *change* in probability moving from being a renter to being an owners holding all those controls constant. 

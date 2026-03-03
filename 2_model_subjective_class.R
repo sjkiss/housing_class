@@ -25,16 +25,23 @@ ggsave(filename="plots/figure_2_effect_of_class_on_subjective_social_class.png",
 
 #### Model subjective class on objective class for each election
 # Use three category subjective class for simplicity
-mod_occupation<-multinom(sub_class2~occupation_oesch_6*as.factor(election), data=ces)
-summary(mod_occupation)
-modelsummary(mod_occupation, shape=model+term~response, stars=T,
-             coef_rename=c("occupation_oesch_61"="Skilled versus all below",
-                           "occupation_oesch_62"="Semi-Professionals Associates versus all below",
-                           "occupation_oesch_63"="Self-Employed versus all below",
-                           "occupation_oesch_64"="Professionals versus all below",
-                           "occupation_oesch_65"="Managers versus all below",
-                           "as.factor(election)2025"="2025"),
-             output="subjective_class_on_oesch_by_election.html")
+model1_sub_class_84_roc<-occupation<-multinom(sub_class2~occupation_oesch_6+income_tertile+degree+own_rent, data=subset(ces, election==1984&quebec!=1))
+model1_sub_class_84_qc<-occupation<-update(model1_sub_class_84_roc, .~., data=subset(ces, election==1984&quebec==1))
+model1_sub_class_25_roc<-occupation<-update(model1_sub_class_84_roc, .~., data=subset(ces, election==2025&quebec!=1))
+model1_sub_class_25_qc<-occupation<-update(model1_sub_class_84_roc, .~., data=subset(ces, election==2025&quebec==1))
+
+model1_sub_class_list<-list("1984"=model1_sub_class_84_roc,"2025"=model1_sub_class_25_roc)
+#Report Sub
+#Report subjective class on objective class
+modelsummary(model1_sub_class_list, fmt=2, stars=T, shape=term~model+response)
+# modelsummary(mod_occupation, shape=model+term~response, stars=T,
+#              coef_rename=c("occupation_oesch_61"="Skilled versus all below",
+#                            "occupation_oesch_62"="Semi-Professionals Associates versus all below",
+#                            "occupation_oesch_63"="Self-Employed versus all below",
+#                            "occupation_oesch_64"="Professionals versus all below",
+#                            "occupation_oesch_65"="Managers versus all below",
+#                            "as.factor(election)2025"="2025"),
+#              output="subjective_class_on_oesch_by_election.html")
 
 library(marginaleffects)
 
@@ -64,10 +71,11 @@ avg_predictions(mod_own,
 library(here)
 ggsave(filename=here("plots/figure_4_p_homeownership_by_age.png"), width=8, height=6)
 
-# Now check to see if home owership changes the
-mod_occupation_own_1984<-multinom(sub_class2~own_rent*age*I(age^2)*occupation_oesch_6, data=subset(ces, election==1984))
-mod_occupation_own_2025<-multinom(sub_class2~own_rent*age*I(age^2)*occupation_oesch_6, data=subset(ces, election==2025))
-summary(mod_occupation_own_1984)
+# Now check to see if home owership changes the sense of subjective class
+mod_occupation_own_1984<-multinom(sub_class2~degree+income_tertile+own_rent+age+I(age^2)+occupation_oesch_6, data=subset(ces, election==1984))
+mod_occupation_own_2025<-multinom(sub_class2~degree+income_tertile+own_rent+age+I(age^2)+occupation_oesch_6, data=subset(ces, election==2025))
+
+modelsummary(mod_occupation_own_1984, stars=T,  shape=model+term~response,fmt=2)
 
 # Generate effect of ownership on subjective class without regard to age
 
@@ -99,3 +107,18 @@ effects_1984 %>%
   ggplot(., aes(x=age,y=estimate, col=as.factor(Election)))+geom_pointrange(aes(ymin=conf.low, ymax=conf.high))+
   facet_grid(fct_relevel(group, "Working Class")~occupation_oesch_6)+
   geom_hline(yintercept=0)+theme(legend.position="bottom")
+
+library(janitor)
+tabyl(ces, sub_class2, own_rent, election) %>%
+  adorn_percentages()
+
+
+# What dictates inflation versus deflation
+model1_concordance_84_roc<-multinom(concordance~income_tertile+degree+own_rent, data=subset(ces, election==1984&quebec!=1))
+model1_concordance_25_roc<-multinom(concordance~income_tertile+degree+own_rent, data=subset(ces, election==2025&quebec!=1))
+model1_concordance_list<-list("1984"=model1_concordance_84_roc, "2025"=model1_concordance_25_roc)
+modelsummary(model1_concordance_list,
+             stars=T, fmt=2, shape=term~model+response)
+
+ces %>%
+  count(election, degree, occupation_oesch_6_2, sub_class2,concordance) %>% view()

@@ -1,0 +1,51 @@
+---
+title: "Understanding Oesch"
+format: html
+editor: visual
+execute: 
+  warning: false
+  message: false
+  echo: false
+---
+
+## 
+
+```{r}
+#| label: setup
+#| 
+library(cesdata2)
+source("1_housing_class_master.R")
+```
+
+This is implementation of the Oesch 16-class categorization, where I have lumped all the self-employed together. He distinguishes those. 
+```{r}
+ces25b %>% 
+  filter(!is.na(occupation_oesch)) %>% 
+  filter(employment==1 )%>% 
+slice_sample(n=5, by=occupation_oesch) %>% 
+  as_factor() %>% 
+  select(occupation_name, NOC21_5, occupation_oesch,occupation_oesch_5) %>% 
+  knitr::kable()
+```
+
+This is the distribution of respondents on that schema..
+
+```{r}
+ces25b %>% 
+  count(occupation_oesch) %>% 
+  as_factor() %>% 
+  knitr::kable()
+
+```
+
+Ths is the distribution of employment status. 
+```{r}
+ces25b %>% 
+  count(cps25_employment) %>% 
+  as_factor() %>% 
+  knitr::kable()
+
+```
+
+
+
