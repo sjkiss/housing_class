@@ -1,0 +1,71 @@
+---
+title: "Discordance"
+format: html
+project:
+  type: default
+  output-dir: "Concordance"   # routes all Quarto-rendered outputs to Tables/
+execute: 
+  message: false
+  warning: false
+---
+
+
+```{r}
+#| label: setup
+knitr::opts_chunk$set(fig.path = "plots/")
+
+```
+
+```{r}
+#| label: load-data
+source("1_housing_class_master.R")
+
+```
+
+Here is the relationship between objective and social class in 1984 and 2025. 
+
+```{r}
+#| label: show-oesch-objective
+ces %>% 
+ # filter(election==2025) %>% 
+  count(election, occupation_oesch, obj_class2) %>% 
+  print(n=51)
+```
+```{r}
+#| label: show-concordance
+ces %>% 
+ # filter(election==2025) %>% 
+  count(election, concordance, obj_class2,sub_class2) %>% 
+  print(n=51)
+```
+
+
+```{r}
+#| label: model
+#| message: false
+#| warning: false
+
+source("3_model_votechoice_occupation_oesch_5.R")
+modelsummary(concordance_vote_list, stars=T,
+             fmt=2, shape=term~model+response)
+```
+
+```{r}
+ces %>% 
+  group_by(election) %>% 
+  select(election, obj_class2, sub_class2, concordance) %>% 
+  count(election, obj_class2, sub_class2, concordance) %>% 
+  #filter(complete.cases(obj_class2, sub_class2)) %>% 
+  view()
+ces %>% 
+  filter(election==2025) %>% 
+  count(occupation_oesch_5)
+```
+
+```{r}
+#| label: print-models
+concordance_vote_list_ownership<-list(model1_concordance_vote_25_roc, model2_concordance_vote_25_roc, model3_concordance_vote_25_roc)
+modelsummary(concordance_vote_list_ownership, stars=T,
+             fmt=2, shape=term~model+response)
+```
+

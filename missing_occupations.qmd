@@ -1,0 +1,172 @@
+---
+title: "Checking Missing Values"
+format: html
+
+editor: visual
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: load-libraries
+library(tidyverse)
+library(srvyr)
+library(haven)
+library(labelled)
+```
+
+```{r}
+#| label: load-data
+#| results: hide
+library(cesdata2)
+
+ces25b %>% 
+  mutate(valid_oesch=!is.na(occupation_oesch)) %>% 
+  count(cps25_employment, valid_oesch) %>% as_factor()
+```
+
+
+
+## CES25
+
+There are `r nrow(ces25b)` respondents in the module. There are three variables to consider.
+
+1.  `occupation_code` is the 5-digit NOC code respondents selected in the menu that we provided. It was offered to all respondents, retired, student or not. This variable is 5-digits long if respondents selected a code. It is stored as a character variable, so if respondents picked nothing, then it is just empty. 
+2.  `pes_occ_select_2` is the open-ended text response that was offered to respondents at the end of the menu selection process if they could not see their response. This variable has the response `-99` if it was seen but not selected, sometimes it is blank, and many occasions a text response such as `retired` or `yes` or actual occupations. We coded those occupations as best we could.
+3.  `NOC21_5`. This variable is the combination either of `occupation_code` from the survey menu or the coding process by the RAs.
+
+I'm going to count how many valid values there are on each variable by employment status.
+
+```{r}
+#| label: noc-occupation-code 
+library(crosstable)
+
+ces25b %>% 
+  mutate(occupation_code_valid=case_when(
+    nchar(occupation_code)==5~"Valid 5 digit NOC code from menu",
+    nchar(occupation_code)!=5~"No Valid 5 digit NOC code from menu"
+  ))->ces25b
+crosstable(ces25b, occupation_code_valid) %>% as_flextable(., keep_id=F)
+
+```
+
+Unfortunately, only 43% of respondents successfully used the menu.
+
+Now, I'm going to check the open-ended responses in `pes25_occ_select_2`. I'm going to create another variable that codes those responses into three categories:
+
+1.  No response
+2.  Saw menu but no open response
+3.  Some open response.
+
+```{r}
+#| label: select-2-summary
+#| results: 'markup'
+ces25b %>% 
+  mutate(occupation_open=case_when(
+    # If pes25_occ_select2 has no characters then there is no response
+    nchar(pes25_occ_select_2)==0~"No response",
+    #If they 
+   pes25_occ_select_2=="-99"~"Saw menu but no open response",
+   TRUE~"Some open response"
+  )) ->ces25b
+crosstable(ces25b,occupation_open)%>% as_flextable(., keep_id=F)
+```
+
+We can crosstab these variables and this will tell us what the relationship between `occupation_code` and `pes_occ_select_2` is.
+
+```{r}
+#| label: crosstab
+crosstable(ces25b,occupation_open~occupation_code_valid)%>% as_flextable(., keep_id=F)
+
+```
+
+Who are those 350 respondents who have a valid 5 digit code from the menu and provided some open response?
+
+```{r}
+#| label: check-valid-5-digit-codes
+ces25b %>% 
+  filter(occupation_code_valid=="Valid 5 digit NOC code from menu" &occupation_open=="Some open response") %>% 
+  select(occupation_code, pes25_occ_select_2, NOC21_5) 
+```
+
+To me these look like people who picked a menu response (so there is a valid 5 digit NOC code from the menu) and then validated that response in some way. But they clearly do have a good NOC code.
+
+So, what of the of the 489 ones who do *not* have a valid 5-digit NOC code from the Qualtrics menu, but gave an open-ended response, what happened to them?
+
+```{r}
+#| label: check-open-ended-responses
+
+  ces25b %>% 
+  filter(occupation_open=="Some open response"&occupation_code_valid=="No Valid 5 digit NOC code from menu") %>% 
+  select(occupation_code,pes25_occ_select_2, NOC21_5)
+```
+
+These are the respondents that we coded. They provided open-ended job titles and we manually coded them into NOC codes.
+
+Now, each of these NOC codes were slotted into Oesch codes. I'm pretty sure we were able to capture all of those. 
+
+But there are a mix of employed, retired and unemployed people who provided NOC codes. What is the distribution of Oesch codes across those employment statuses.
+I have currently eliminated all employment status restrictions in the code to make the `occupation_oesch` variable. All of these people somehow gave some kind of valid NOC21 code that can be mapped to a class category. I think this is as big as we can go. 
+
+The distribution of valid oesch codes by employment status is as follows:
+
+```{r}
+#| label: count-valid-noc-codes-by-emp-status
+
+ces25b %>% 
+  mutate(valid_oesch=!is.na(occupation_oesch), valid_noc=!is.na(NOC21_5))->ces25b
+crosstable(ces25b, as_factor(cps25_employment)~valid_oesch)%>% as_flextable(., keep_id=F)
+
+```
+
+
+That will give us 296 retired people, 42, unemployed, 26 students, 14 homemakers and 28 disabled people. That's `r 296+42+26+14+28`.
+
+For a grand total, we will have:
+
+```{r}
+#| label: sample-size-2025
+
+table(!is.na(ces25b$occupation_oesch))
+
+```
+If we compare this to 1984 we can see what happens. 
+
+```{r}
+#| label: check-1984
+
+ces84 %>% 
+count(VAR524, valid_oesch=!is.na(occupation_oesch)) %>% as_factor()
+```
+One thing to note, there is a huge difference in having a phone interviewer soliciting occupation codes compared to the web mode. We got around 1/4 of the respondents who worked providing a valid occupation code. Having an interviewer probing a response makes a huge difference. Also the 802 respondents who responded `housewife` do not have valid oesch codes because they truly do not have occupation codes. They were assigned a `31` in the occupation variable. Look:
+
+```{r}
+#| label: show-housewives
+ces84 %>% 
+  filter(SOC==31) %>% 
+  select(VAR524, SOC) %>% as_factor() %>% 
+  slice_sample(n=25)
+```
+
+The retired people however were offered the chance to provide an occupation.
+
+```{r}
+#| label: show-retired
+
+ces84 %>% 
+  filter(VAR524==3) %>% 
+  select(VAR524, SOC, occupation_oesch) %>% as_factor() %>% 
+  slice_sample(n=25)
+
+```
+
+
+But, we can use the same logic as in ces25b and provide an expansive definition of who class as anyone who provided a valid occupation. That will give us this sample size:
+
+```{r}
+#| label: sample-size1984
+table(!is.na(ces84$occupation_oesch))
+```
+A lot lower, but more than where we started with!

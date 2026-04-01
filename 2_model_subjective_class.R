@@ -7,25 +7,25 @@ modelsummary(mod_time, stars=T,
 
 #### Check Class by subjective social class
 
-ces %>%
-  group_by(election) %>%
-  count(occupation_oesch_6, sub_class) %>%
-  group_by(election, occupation_oesch_6) %>%
-  filter(!is.na(sub_class)) %>%
-  filter(!is.na(occupation_oesch_6)) %>%
-  mutate(pct=n/sum(n)) %>%
-  arrange(occupation_oesch_6,sub_class, election) %>%
-  ggplot(., aes(y=occupation_oesch_6, fill=factor(election, levels=c("1984", "2025")), x=pct))+
-  geom_col(position=position_dodge2(reverse = TRUE))+
-  theme_minimal()+
-  scale_fill_manual(values=c("black", "lightgrey"))+
-  labs(fill="Election", x="Percent")+facet_grid(~sub_class)+
-  theme(legend.position="bottom")
-ggsave(filename="plots/figure_2_effect_of_class_on_subjective_social_class.png", width=10, height=5)
+# ces %>%
+#   group_by(election) %>%
+#   count(occupation_oesch_6, sub_class) %>%
+#   group_by(election, occupation_oesch_6) %>%
+#   filter(!is.na(sub_class)) %>%
+#   filter(!is.na(occupation_oesch_6)) %>%
+#   mutate(pct=n/sum(n)) %>%
+#   arrange(occupation_oesch_6,sub_class, election) %>%
+#   ggplot(., aes(y=occupation_oesch_6, fill=factor(election, levels=c("1984", "2025")), x=pct))+
+#   geom_col(position=position_dodge2(reverse = TRUE))+
+#   theme_minimal()+
+#   scale_fill_manual(values=c("black", "lightgrey"))+
+#   labs(fill="Election", x="Percent")+facet_grid(~sub_class)+
+#   theme(legend.position="bottom")
+# ggsave(filename="plots/figure_2_effect_of_class_on_subjective_social_class.png", width=10, height=5)
 
 #### Model subjective class on objective class for each election
 # Use three category subjective class for simplicity
-model1_sub_class_84_roc<-occupation<-multinom(sub_class2~occupation_oesch_6+income_tertile+degree+own_rent, data=subset(ces, election==1984&quebec!=1))
+model1_sub_class_84_roc<-occupation<-multinom(sub_class2~occupation_oesch_5+income_tertile+degree+own_rent, data=subset(ces, election==1984&quebec!=1))
 model1_sub_class_84_qc<-occupation<-update(model1_sub_class_84_roc, .~., data=subset(ces, election==1984&quebec==1))
 model1_sub_class_25_roc<-occupation<-update(model1_sub_class_84_roc, .~., data=subset(ces, election==2025&quebec!=1))
 model1_sub_class_25_qc<-occupation<-update(model1_sub_class_84_roc, .~., data=subset(ces, election==2025&quebec==1))

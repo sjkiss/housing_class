@@ -5,21 +5,38 @@ library(cesdata2)
 #data("cesdata2")
 data("ces25b")
 data('ces84')
-#Create survey design
-names(ces25b)
-ces25b$occupation_oesch_6
-ces84$occupation_oesch_6
+
 
 library(tidyverse)
 library(srvyr)
 library(haven)
 
-#Vote patterns of oesch classs
-# Create survey desig
-table(ces25b$occupation_oesch, useNA = "ifany")
+#What are the underlying occupation variables
+library(labelled)
+lookfor(ces25b, "occupation")
+ces25b %>%
+  select(pes25_occ_select, pes25_occ_select_2, occupation_code, occupation_name) %>%
+  view()
+#Compare our NOC21_5 with occupation_code
+ces25b %>%
+  select(pes25_occ_select_2,occupation_code, NOC21_5) %>% view()
+#Are there any retired people that we can get
+ces25b %>%
+  filter(cps25_employment==4) %>%
+  select(pes25_occ_select_2, occupation_code, NOC21_5) %>%
+  filter(is.na(NOC21_5)) %>% view()
+
+# What percentage of people employed in 1984 were given an
+lookfor(ces84, "occupation")
+ces84 %>%
+  filter(VAR524==1) %>%
+  select(SOC) %>%
+  filter(SOC==34)
+# Create survey desig# CreNOC21_5ate survey desig
+table(as_factor(ces25b$occupation_oesch), useNA = "ifany")
 #Check by retirement status
 with(ces25b, table(occupation_oesch, cps25_employment,useNA = "ifany"))
-glimpse(ces25b)
+
 #Check which NOC codes are missing
 ces25b %>%
   #filter(cps25_employment==1) %>%

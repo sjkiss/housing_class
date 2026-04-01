@@ -56,6 +56,11 @@ model1_concordance_vote_84_qc<-multinom(vote2~concordance, data=subset(ces,elect
 model1_concordance_vote_25_roc<-multinom(vote2~concordance, data=subset(ces,election==2025&quebec!=1))
 model1_concordance_vote_25_qc<-multinom(vote2~concordance, data=subset(ces,election==2025&quebec==1))
 #these models break out the material classes to see how class concordance interacts with vote ces$occupation_oesch_5
+model1a_concordance_vote_84_roc<-update(model1_concordance_vote_84_roc, .~., data=subset(ces,election==1984&quebec!=1&occupation_oesch_5=="Unskilled workers"))
+model1b_concordance_vote_84_roc<-update(model1_concordance_vote_84_roc, .~., data=subset(ces,election==1984&quebec!=1&occupation_oesch_5=="Skilled workers"))
+model1c_concordance_vote_84_roc<-update(model1_concordance_vote_84_roc, .~., data=subset(ces,election==1984&quebec!=1&occupation_oesch_5=="Lower-grade service"))
+model1d_concordance_vote_84_roc<-update(model1_concordance_vote_84_roc, .~., data=subset(ces,election==1984&quebec!=1&occupation_oesch_5=="Higher-grade service"))
+#these models break out the material classes to see how class concordance interacts with vote ces$occupation_oesch_5
 model1a_concordance_vote_25_roc<-update(model1_concordance_vote_25_roc, .~., data=subset(ces,election==2025&quebec!=1&occupation_oesch_5=="Unskilled workers"))
 model1b_concordance_vote_25_roc<-update(model1_concordance_vote_25_roc, .~., data=subset(ces,election==2025&quebec!=1&occupation_oesch_5=="Skilled workers"))
 model1c_concordance_vote_25_roc<-update(model1_concordance_vote_25_roc, .~., data=subset(ces,election==2025&quebec!=1&occupation_oesch_5=="Lower-grade service"))
@@ -64,18 +69,34 @@ model1d_concordance_vote_25_roc<-update(model1_concordance_vote_25_roc, .~., dat
 # model1d_concordance_vote_25_roc<-update(model1_concordance_vote_25_roc, .~., data=subset(ces,election==2025&quebec!=1&occupation_oesch_5=="Professionals"))
 # model1e_concordance_vote_25_roc<-update(model1_concordance_vote_25_roc, .~., data=subset(ces,election==2025&quebec!=1&occupation_oesch_5=="Managers"))
 #These models add home ownership to the mdoels
+#Take out concordance and add own_rent
 model2_concordance_vote_25_roc<-update(model1_concordance_vote_25_roc, .~-concordance+own_rent)
+#replace
 model3_concordance_vote_25_roc<-update(model1_concordance_vote_25_roc, .~concordance+own_rent)
+#add interaction term
+model4_concordance_vote_25_roc<-update(model1_concordance_vote_25_roc, .~concordance*own_rent)
+#summary(model4_concordance_vote_25_roc)
 #Report Class concordance over time 1984 and 2025
 concordance_vote_list<-list("1984"=model1_concordance_vote_84_roc, "2025"=model1_concordance_vote_25_roc)
 modelsummary(concordance_vote_list, stars=T,
              fmt=2, shape=term~model+response)
 #Report Class concordance by material class
+concordance_vote_list_material_84<-list(model1a_concordance_vote_84_roc, model1b_concordance_vote_84_roc, model1c_concordance_vote_84_roc, model1d_concordance_vote_84_roc)
+modelsummary(concordance_vote_list_material_84,
+             stars=T,
+             fmt=2, shape=term~model+response)
 concordance_vote_list_material<-list(model1a_concordance_vote_25_roc, model1b_concordance_vote_25_roc, model1c_concordance_vote_25_roc, model1d_concordance_vote_25_roc)
 modelsummary(concordance_vote_list_material,
              stars=T,
              fmt=2, shape=term~model+response)
 #Report Class concordance and home ownership
-concordance_vote_list_ownership<-list(model1_concordance_vote_25_roc, model2_concordance_vote_25_roc, model3_concordance_vote_25_roc)
+concordance_vote_list_ownership<-list(model1_concordance_vote_25_roc, model2_concordance_vote_25_roc, model3_concordance_vote_25_roc, model4_concordance_vote_25_roc)
 modelsummary(concordance_vote_list_ownership, stars=T,
              fmt=2, shape=term~model+response)
+
+ces25b %>%
+  select(cps25_employment, NOC21_5, occupation_oesch) %>%
+  as_factor() %>%
+  group_by(cps25_employment) %>%
+  count(valid_noc=is.na(NOC21_5), valid_oesch=is.na(occupation_oesch)) %>%
+  filter(valid_noc==T)
