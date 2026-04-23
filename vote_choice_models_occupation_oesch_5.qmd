@@ -10,6 +10,7 @@ execute:
   echo: false
   output: false
   cache: false
+
 ---
 
 
@@ -62,7 +63,7 @@ ces84_sub_class %>%
   bind_rows(ces25_sub_class) %>% rename("pct"="coef", "se"="_se") %>% 
   ggplot(., aes(y=fct_relevel(sub_class2, "Working Class"), fill=factor(election, levels=c("1984", "2025")), x=pct))+
   geom_col( position=position_dodge(reverse=T))+
-    geom_linerange(aes(xmin=pct+(1.96*se), xmax=pct+(1.96*se)))+
+    #geom_linerange(aes(xmin=pct+(1.96*se), xmax=pct+(1.96*se)))+
   scale_fill_manual(values=c("black", "lightgrey"))+
   labs(x="Percent", y="Subjective Social Class", fill="Election", title="Distribution of Subjective Social Class, 1984 and 2025")
 
@@ -150,11 +151,6 @@ model4_list %>%
 
 ```
 
-This brings out some interesting information. 
-
-1. **For working class voters** - there was *no* effect of housing status on vote choice in 1984 for working class voters. 
-2. **For middle class voters** - there was a very mild effect in 1984 where owners were 10 percent more likely to vote Liberal than others. But in 2025, homeowners were 10 percent *less* likely to vote Liberal 10 perent *more* likely to vote Conservative.
-3. **for upper class voters** - owning a home increased the probability of voting for the Liberals by about 10 percent in 1984 and it reduced the probability of voting for the Conservatives in 2025. 
 
 ### Subjective Social class and Vote choice
 

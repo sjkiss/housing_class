@@ -1,0 +1,127 @@
+---
+title: "CPSA Summary"
+format: html
+project:
+  type: default
+  output-dir: "CPSA"
+editor: source
+execute:
+  message: false
+  warning: false
+  echo: false
+---
+
+```{r}
+#| label: load-data
+source("3_model_votechoice_occupation_oesch_5.R")
+theme_set(theme_minimal())
+```
+
+## Subjective Social Class
+
+```{r}
+#| label: distribution-social-class
+#| include: true
+ces %>% 
+  count(election,sub_class2) %>% 
+  group_by(election) %>% 
+  mutate(Percent=n/sum(n)) %>% 
+  filter(!is.na(sub_class2)) %>% 
+  ggplot(., aes(y=fct_relevel(sub_class2, "Working Class"), fill=factor(election, levels=c("1984", "2025")), x=Percent))+
+  geom_col( position=position_dodge(reverse=T))+
+    #geom_linerange(aes(xmin=pct+(1.96*se), xmax=pct+(1.96*se)))+
+  scale_fill_manual(values=c("black", "lightgrey"))+
+  labs(x="Percent", y="Subjective Social Class", fill="Election", title="Distribution of Subjective Social Class, 1984 and 2025")
+```
+
+There is a greater polarization of subjective social class. This fits only partially with what we know about the economy. It fits with the decline of manual manufacturing, but does not fit with increasing income inequality.
+
+## Concordance 
+
+There is a mixed picture of concordance. There are more objective working class inflators than before but also more objective middle class deflators. Might that be related to housing?
+
+```{r}
+#| label: concordance
+
+ces %>% count(election, obj_class2,concordance) %>% 
+  group_by(election, obj_class2) %>% 
+    filter(!is.na(concordance)) %>% 
+  mutate(Percent=n/sum(n)) %>% 
+  ggplot(., aes(x=Percent, y=fct_relevel(concordance, "Deflator", "Concordant"), fill=election))+  geom_col( position=position_dodge(reverse=T))+labs(x="Percent", y="Objective Social Class", fill="Election", title="Distribution of Subjective Social Class, 1984 and 2025")+facet_grid(~fct_relevel(obj_class2,"Working Class"), scales="free_y")+scale_fill_grey()+theme(legend.position="bottom")
+```
+
+- Rates of concordance have gone down for working and middle class people
+- Rates of deflation amongst middle class people have gone *up*
+- Rates of inflation amongst working and middle class people have also gone *up*
+
+Overall there is a *polarization* of class sensibilities. These changes are statistically significant.  Is this related to housing? 
+
+
+```{r}
+#| label: model-concordance
+library(nnet)
+# Model only middle class (can deflate, be concordant, or inflate)
+mod_middle <- multinom(concordance ~ election, data = subset(ces, obj_class2 == "Middle Class"))
+
+# Model only working class (can only be concordant or inflate)
+mod_working <- glm(concordance ~ election, data = subset(ces, obj_class2 == "Working Class"),
+                   family = binomial)  # binary: Concordant vs Inflator
+
+# Model only upper class (can only be concordant or deflate)
+mod_upper <- glm(concordance ~ election, data = subset(ces, obj_class2 == "Upper Class"),
+                 family = binomial)  # binary: Concordant vs Deflator
+
+# Binary models together (working class and upper class)
+modelsummary(
+  list(
+    "Working class\n(ref: Concordant)" = mod_working,
+    "Upper class\n(ref: Concordant)"   = mod_upper
+  ),
+  exponentiate  = TRUE,
+  statistic     = "conf.int",
+  stars         = TRUE,
+  coef_rename   = c("election2025" = "2025 (ref: 1984)"),
+  gof_map       = c("nobs", "logLik", "AIC"),
+  title         = "Odds of inflation (working class) and deflation (upper class) vs. concordance"
+)
+```
+```{r}
+#| label: middle-class-inflation
+# Multinomial model (middle class)
+modelsummary(
+  list("Middle class" = mod_middle),
+  shape         = term ~ model + response,
+  exponentiate  = TRUE,
+  statistic     = "conf.int",
+  stars         = TRUE,
+  coef_rename   = c("election2025" = "2025 (ref: 1984)"),
+  gof_map       = c("nobs", "logLik", "AIC"),
+  title         = "Odds of deflation and inflation vs. concordance (middle class)"
+)
+```
+
+### Concordance and housing.
+
+```{r}
+#| label: concorance-own-models-working-upper
+mod_own_working_84<-glm(concordance~own_rent, data=subset(ces, obj_class2=="Working Class"&election=="1984"), family="binomial")
+mod_own_working_25<-glm(concordance~own_rent, data=subset(ces, obj_class2=="Working Class"&election=="2025"), family="binomial")
+mod_own_upper_84<-glm(concordance~own_rent, data=subset(ces, obj_class2=="Upper Class"&election=="1984"), family="binomial")
+mod_own_upper_25<-glm(concordance~own_rent, data=subset(ces, obj_class2=="Upper Class"&election=="2025"), family="binomial")
+mod_own_middle_84<-multinom(concordance~own_rent, data=subset(ces, obj_class2=="Middle Class"&election=="1984"))
+mod_own_middle_25<-multinom(concordance~own_rent, data=subset(ces, obj_class2=="Middle Class"&election=="2025"))
+
+
+```
+```{r}
+#| label: print-own-concordance-models-working-upper
+mod_own_list<-list("Working Classs\n1984"=mod_own_working_84, "Working Classs\n2025"=mod_own_working_25, "Upper Classs\n1984"=mod_own_upper_84, "Upper Class\n2025"=mod_own_upper_25)
+modelsummary(mod_own_list, stars=T, coef_rename = c("own_rentOwn"="Ownership"))
+```
+```{r}
+#| label: print-own-concordance-models-middle
+mod_own_middle_list<-list("Middle Class 1984"=mod_own_middle_84, "Middle Class 2025"=mod_own_middle_25)
+modelsummary(mod_own_middle_list, stars=T, shape=term~model+response, coef_rename=c("own_rentOwn"="Ownership"))
+
+
+```

@@ -55,6 +55,7 @@ ces %>%
   ggplot(., aes(x=pct, y=fct_relevel(sub_class2, "Working Class"), fill=fct_relevel(election, "2025", "1984")))+geom_col(position="dodge")+labs(fill="Election", x="Percent", y="Subjective Social Class")+theme_minimal()+
   guides(fill=guide_legend(reverse=T))+scale_fill_grey(start=0.8, end=0.2)
 ```
+
 ```{r}
 #| label: effects-home-ownership
 library(marginaleffects) 
@@ -67,4 +68,3 @@ own_effects_class %>%
   #filter(group!="Upper Class") %>%    
 ggplot(., aes(x=estimate, y=occupation_oesch_5, col=Year))+facet_wrap(~fct_relevel(group, "Working Class"))+   geom_pointrange(aes(xmin=conf.low, xmax=conf.high))+   theme_minimal()+   scale_color_grey()
 ```
-

@@ -50,7 +50,7 @@ model4_list %>%
 
 
 #### Concordance
-levels(ces$occupation_oesch_5)
+
 model1_concordance_vote_84_roc<-multinom(vote2~concordance, data=subset(ces,election==1984&quebec!=1))
 model1_concordance_vote_84_qc<-multinom(vote2~concordance, data=subset(ces,election==1984&quebec==1))
 model1_concordance_vote_25_roc<-multinom(vote2~concordance, data=subset(ces,election==2025&quebec!=1))

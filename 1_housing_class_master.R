@@ -54,11 +54,8 @@ ces$own_rent<-Recode(ces$own_rent, "'Other'='Rent'", levels=c("Rent", "Own"))
 #Concordant and Discordant
 # We need an objective cl
 
-levels(ces$occupation_oesch)
-levels(ces$sub_class2)
-ces25b$education
-ces84$education
-ces$education
+val_labels(ces$occupation_oesch)
+ces$occupation_oesch
 ces%>%
   mutate(obj_class2=case_when(
     occupation_oesch==5~ "Upper Class",
@@ -77,7 +74,10 @@ ces%>%
     occupation_oesch==4&(education>2&education<5)~"Middle Class",
     occupation_oesch==4&(education==5)~"Upper Class"
   ))->ces
-table(ces$obj_class2, ces$election)
+# round(prop.table(table(as_factor(ces$occupation_oesch), ces$election),2),2)
+# library(crosstable)
+# crosstable(ces, as_factor(occupation_oesch)~election, percent_pattern="{n} ({p_col})")
+# ?crosstable
 ces$obj_class2<-factor(ces$obj_class2, levels=c("Middle Class", "Working Class", "Upper Class"))
 #Factor occupation_oesch_5
 
