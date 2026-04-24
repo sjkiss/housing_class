@@ -4,114 +4,69 @@
 library(cesdata2)
 #data("cesdata2")
 data("ces25b")
-data("ces84")
-#Create survey design
-names(ces25b)
-ces25b$occupation_oesch_6
-ces84$occupation_oesch_6
-
+data('ces84')
 
 
 library(tidyverse)
 library(srvyr)
 library(haven)
-library(pollster)
 
-#Combine the two
-common_vars<-c(vote, occupation_oesch_6)
+#What are the underlying occupation variables
+library(labelled)
+lookfor(ces25b, "occupation")
 ces25b %>%
-  bind_rows(., ces84)->ces
-ces %>%
-  select(occupation_oesch_6, vote, election)->ces
+  select(pes25_occ_select, pes25_occ_select_2, occupation_code, occupation_name) %>%
+  view()
+#Compare our NOC21_5 with occupation_code
+ces25b %>%
+  select(pes25_occ_select_2,occupation_code, NOC21_5) %>% view()
+#Are there any retired people that we can get
+ces25b %>%
+  filter(cps25_employment==4) %>%
+  select(pes25_occ_select_2, occupation_code, NOC21_5) %>%
+  filter(is.na(NOC21_5)) %>% view()
 
-#Vote patterns of oesch classs
-# Create survey desig
-table(ces25b$occupation_oesch, useNA = "ifany")
+# What percentage of people employed in 1984 were given an
+lookfor(ces84, "occupation")
+ces84 %>%
+  filter(VAR524==1) %>%
+  select(SOC) %>%
+  filter(SOC==34)
+# Create survey desig# CreNOC21_5ate survey desig
+table(as_factor(ces25b$occupation_oesch), useNA = "ifany")
 #Check by retirement status
 with(ces25b, table(occupation_oesch, cps25_employment,useNA = "ifany"))
+
 #Check which NOC codes are missing
 ces25b %>%
-  filter(cps25_employment==1) %>%
+  #filter(cps25_employment==1) %>%
   count(occupation_code) %>%
   write.csv(file = "missing_occupation_categories.csv")
-#How many valid oesches do we have right now
+
+#Find missing occupation codes
+library(labelled)
+val_labels(ces25b$cps25_employment)
+
+#This matches the proportion of Canadians working age population
+# in the workforce almost exactly. Kind of amazing, tbh.
+
 
 ces25b %>%
   filter(working==1) %>%
-  select(NOC21_5, occupation_oesch) %>% filter(!is.na(!NOC21_5)&is.na(occupation_oesch))
+  filter(occupation_code=="") %>%
+  select(occupation_code, NOC21_5, pes25_occ_select_2) %>%
+  filter(pes25_occ_select_2!="-99"&pes25_occ_select_2!="")
 
-
-
-# Recodes
-
-ces25b$vote<-as_factor(ces25b$vote)
-ces25b$vote<-factor(ces25b$vote, levels=c("Conservative", "Liberal", "NDP", "Bloc", "Green", "Other"))
-library(nnet)
-table(ces25b$occupation_oesch)
-ces25b$occupation_oesch<-factor(ces25b$occupation_oesch, levels=c("Production workers",
-                                         "Office clerks",
-                                         "Service workers",
-                                         "Self-employed",
-                                         "Technical Professionals",
-                                         "(Associate) Managers",
-                                         "Socio-cultural (semi) Professionals"))
-
-#Set Greens to be other
-ces25b$vote2<-car::Recode(ces25b$vote, "'Green'=NA;
-                     'Other'=NA", levels=c(  "Conservative","Liberal", "NDP", "Bloc"))
-library(crosstable)
-library(kableExtra)
-##Analysis
-# Make Survey Design
+#How many do we currentl
 #Make survey design
 ces25b %>%
   filter(!is.na(cps25_weight_kiss_module)) %>%
   as_survey_design(., weights=cps25_weight_kiss_module)->ces25_des
-#What proportion of the sample is working
-# ces25_des %>%
-#   group_by(working) %>%
-#   summarise(pct=survey_prop())
-#What is the vote
-# ces25b %>%
-#  filter(!is.na(cps25_weight_kiss_module)) %>%
-#   filter(!is.na(vote2)) %>%
-#   topline(., variable=vote2, weight=cps25_weight_kiss_module)
-
-#Unweighted working
-ces25b %>%
-  crosstable(., cols=working)
-#Unweighted vote intention
-ces25b %>%
- # /filter(!is.na(cps25_weight_kiss_module)) %>%
-  filter(!is.na(vote2)) %>%
-  crosstable(., cols=vote2)
-# What are the dates of our responses
-#PLot of date of start dates
-ces25b %>%
-  ggplot(., aes(x=cps25_StartDate_DMY))+geom_histogram()
-
-
-#What is the oesch by vote
-#Weighted crosstab of occupation and vote2
-# ces25_des %>%
-#   filter(!is.na(vote2)) %>%
-#   filter(!is.na(occupation_oesch)) %>%
-#   group_by(occupation_oesch, vote2) %>%
-#   summarise(pct=survey_prop()) %>% view()
-
-#Install.
-#
-mod1<-multinom(vote2~occupation_oesch,
-               data=subset(ces25b, !is.na(cps25_weight_kiss_module)))
-library(modelsummary)
-modelsummary(mod1, shape=model+term~response,
-             coef_omit=c("(Intercept)"), fmt=2, stars=T,
-             output="model1.html")
-
-
-# Check the Quebec situation
-ces25b$que
-
+ces25b$occupat
+ces25b$vote
+library(survey)
+ces25_des %>% group_by(occupation_oesch) %>%
+  summarise(total=survey_total())
 # Do not own homes
 ces25b %>%
   mutate(homeowner=case_when(

@@ -9,12 +9,19 @@ execute:
   message: false
   warning: false
   echo: false
+
 ---
 
 ```{r}
 #| label: load-data
+#| output: false
+
+# Run scripts that fire everything up
 source("3_model_votechoice_occupation_oesch_5.R")
-theme_set(theme_minimal())
+#Set theme for plots
+theme_set(theme_minimal())+theme(legend.position = "bottom")
+#Make vector for gof_omit
+gof_omit_vector<-c("AIC|BIC|Log.Lik.|F")
 ```
 
 ## Subjective Social Class
@@ -47,7 +54,7 @@ ces %>% count(election, obj_class2,concordance) %>%
   group_by(election, obj_class2) %>% 
     filter(!is.na(concordance)) %>% 
   mutate(Percent=n/sum(n)) %>% 
-  ggplot(., aes(x=Percent, y=fct_relevel(concordance, "Deflator", "Concordant"), fill=election))+  geom_col( position=position_dodge(reverse=T))+labs(x="Percent", y="Objective Social Class", fill="Election", title="Distribution of Subjective Social Class, 1984 and 2025")+facet_grid(~fct_relevel(obj_class2,"Working Class"), scales="free_y")+scale_fill_grey()+theme(legend.position="bottom")
+  ggplot(., aes(x=Percent, y=fct_relevel(concordance, "Deflator", "Concordant"), fill=election))+  geom_col( position=position_dodge(reverse=T))+labs(x="Percent", y="Objective Social Class", fill="Election", title="Cocnordance by Objective Social Class, 1984 and 2025")+facet_grid(~fct_relevel(obj_class2,"Working Class"), scales="free_y")+scale_fill_grey()+theme(legend.position="bottom")
 ```
 
 - Rates of concordance have gone down for working and middle class people
@@ -77,8 +84,8 @@ modelsummary(
     "Working class\n(ref: Concordant)" = mod_working,
     "Upper class\n(ref: Concordant)"   = mod_upper
   ),
-  exponentiate  = TRUE,
-  statistic     = "conf.int",
+ # exponentiate  = TRUE,
+  #statistic     = "conf.int",
   stars         = TRUE,
   coef_rename   = c("election2025" = "2025 (ref: 1984)"),
   gof_map       = c("nobs", "logLik", "AIC"),
@@ -91,11 +98,13 @@ modelsummary(
 modelsummary(
   list("Middle class" = mod_middle),
   shape         = term ~ model + response,
-  exponentiate  = TRUE,
-  statistic     = "conf.int",
+  #exponentiate  = TRUE,
+  #statistic     = "conf.int",
   stars         = TRUE,
+  fmt=2,
   coef_rename   = c("election2025" = "2025 (ref: 1984)"),
   gof_map       = c("nobs", "logLik", "AIC"),
+  gof_omit=gof_omit_vector,
   title         = "Odds of deflation and inflation vs. concordance (middle class)"
 )
 ```
@@ -116,12 +125,29 @@ mod_own_middle_25<-multinom(concordance~own_rent, data=subset(ces, obj_class2=="
 ```{r}
 #| label: print-own-concordance-models-working-upper
 mod_own_list<-list("Working Classs\n1984"=mod_own_working_84, "Working Classs\n2025"=mod_own_working_25, "Upper Classs\n1984"=mod_own_upper_84, "Upper Class\n2025"=mod_own_upper_25)
-modelsummary(mod_own_list, stars=T, coef_rename = c("own_rentOwn"="Ownership"))
+modelsummary(mod_own_list, stars=T, coef_rename = c("own_rentOwn"="Ownership"), gof_omit=gof_omit_vector, title="Effect of Ownership on Class Concordance, 1984 and 2025, Working and Upper Class", fmt=2)
 ```
 ```{r}
 #| label: print-own-concordance-models-middle
+
+
+# Make the list of of middle class ownership models
 mod_own_middle_list<-list("Middle Class 1984"=mod_own_middle_84, "Middle Class 2025"=mod_own_middle_25)
-modelsummary(mod_own_middle_list, stars=T, shape=term~model+response, coef_rename=c("own_rentOwn"="Ownership"))
+#Print
+modelsummary(mod_own_middle_list, stars=T, shape=term~model+response, 
+             coef_rename=c("own_rentOwn"="Ownership"), gof_omit=gof_omit_vector, 
+             title="Effect of Ownership on Class Concordance 1984 and 2025, Middle Class", fmt=2)
 
-
+# Generate an effect plot
+library(marginaleffects)
+summary(mod_own_middle_84)
+mod_own_middle_list %>% 
+  map(., avg_comparisons, variables=c("own_rent"), type="probs") %>% 
+  list_rbind() %>% 
+  mutate(Year=c(rep(1984, 3), rep(2025, 3))) %>% 
+  ggplot(., aes(x=group, y=estimate, col=as.factor(Year)))+geom_point()+labs(col="Year")
 ```
+
+## Concordance and Voting
+
+Does this increasing rate of 
