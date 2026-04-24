@@ -208,7 +208,7 @@ modelsummary(vote_concordance_working_list, fmt=2, stars=T,shape=term~response+m
              gof_omit=gof_omit_vector)
 modelsummary(vote_concordance_middle_list, fmt=2, stars=T,shape=term~response+model,
              gof_omit=gof_omit_vector)
-modelsummary(vote_concordance_middle_list, fmt=2, stars=T,shape=term~response+model,
+modelsummary(vote_concordance_upper_list, fmt=2, stars=T,shape=term~response+model,
              gof_omit=gof_omit_vector)
 #these models break out the material classes to see how class concordance interacts with vote ces$occupation_oesch_5
 model1a_concordance_vote_84_roc<-update(model1_concordance_vote_84_roc, .~., data=subset(ces,election==1984&quebec!=1&occupation_oesch_5=="Unskilled workers"))
