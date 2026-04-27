@@ -145,8 +145,12 @@ mod_own_middle_list<-list("Middle Class 1984 No Controls"=mod_own_middle_84,
                           )
 #Print
 modelsummary(mod_own_middle_list, stars=T, shape=term~model+response,
-             coef_rename=c("own_rentOwn"="Ownership"), gof_omit=gof_omit_vector,
-             title="Effect of Ownership on Class Concordance 1984 and 2025, Middle Class", fmt=2)
+             coef_rename=c("own_rentOwn"="Ownership"),
+             gof_omit=gof_omit_vector,
+             title="Effect of Ownership on Class Concordance 1984 and 2025, Middle Class",
+             fmt=2, output=here("ownership_concordance.html"))
+
+
 
 # Generate an effect plot for middle class only
 #
@@ -166,7 +170,7 @@ mod_own_middle_list[c(2,4)]%>%
     facet_grid(~Year)+
   labs(x="Concordance", y="Delta Probability",
        title="Effect of home ownership on concordance, controlling for income and education\n1984 and 2025")
-
+ggsave(here("plots/effect_ownership_concordance.png"), width=10, height=6)
 #### Can we link this to vote at all?
 # What is the research question?
 # Is there a relationship between concordance and vote?
