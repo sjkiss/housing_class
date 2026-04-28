@@ -127,7 +127,8 @@ mod_own_middle_84<-multinom(concordance~own_rent, data=subset(ces_middle_class,e
 mod_own_middle_84_controls<-update(mod_own_middle_84, reformulate(c("own_rent+income_tertile", controls)))
 mod_own_middle_25<-multinom(concordance~own_rent, data=subset(ces_middle_class,election=="2025"))
 mod_own_middle_25_controls<-update(mod_own_middle_25, reformulate(c("own_rent+income_tertile", controls)))
-
+mod_own_list %>%
+  map(., get_estimates)
 mod_own_list<-list("Working Classs\n1984 No controls"=mod_own_working_84,
                    "Working Classs\n1984 Controls"=mod_own_working_84_controls,
                    "Working Classs\n2025 No Controls"=mod_own_working_25,
@@ -145,11 +146,19 @@ mod_own_middle_list<-list("Middle Class 1984 No Controls"=mod_own_middle_84,
                           "Middle Class 2025 Controls"=mod_own_middle_25_controls
                           )
 #Print
+#Print
+
+modelsummary(mod_own_list, stars=T,
+             coef_rename=c("own_rentOwn"="Ownership"),
+             gof_omit=gof_omit_vector,
+             title="Effect of Ownership on Class Concordance 1984 and 2025, Middle Class",
+             fmt=2, output=here("tables/ownership_working_upper_concordance.html"))
+
 modelsummary(mod_own_middle_list, stars=T, shape=term~model+response,
              coef_rename=c("own_rentOwn"="Ownership"),
              gof_omit=gof_omit_vector,
              title="Effect of Ownership on Class Concordance 1984 and 2025, Middle Class",
-             fmt=2, output=here("ownership_concordance.html"))
+             fmt=2, output=here("tables/ownership_middle_concordance.html"))
 
 
 
