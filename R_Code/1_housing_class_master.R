@@ -52,7 +52,7 @@ ces$sub_class2<-car::Recode(ces$sub_class, "'Lower Class'='Working Class';
                                                      "Upper Class"))
 ces$own_rent<-Recode(ces$own_rent, "'Other'='Rent'", levels=c("Rent", "Own"))
 
-
+levels(ces$occupation_oesch)
 #Define Objective social class with oesch variables
 ces%>%
   mutate(obj_class2=case_when(
@@ -72,6 +72,7 @@ ces%>%
     occupation_oesch==4&(education>2&education<5)~"Middle Class",
     occupation_oesch==4&(education==5)~"Upper Class"
   ))->ces
+
 # round(prop.table(table(as_factor(ces$occupation_oesch), ces$election),2),2)
 # library(crosstable)
 # crosstable(ces, as_factor(occupation_oesch)~election, percent_pattern="{n} ({p_col})")
@@ -118,6 +119,15 @@ table(ces$occupation_oesch_5_2)
 ces$occupation_oesch_5_2<-factor(ces$occupation_oesch_5_2, levels=c("Working class", "Lower-grade service",  "Self-employed","Higher-grade service"))
 #ces$occupation_oesch_6_2<-factor(ces$occupation_oesch_6_2, levels=c("Working Class", "Semi-Professionals Associate Managers", "Self-employed", "Professionals", "Managers"))
 
+
+# conservative
+ces$vote2
+ces %>%
+  mutate(conservative=case_when(
+    vote2=="Conservative"~"Conservative",
+    TRUE ~"Non-Conservative"
+  ))->ces
+ces$conservative<-factor(ces$conservative)
 #### Distribution of Subjective Class by election
 ces %>%
   group_by(election, sub_class2) %>%

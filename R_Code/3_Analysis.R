@@ -276,3 +276,11 @@ modelsummary(vote_concordance_middle_full_list, fmt=2, stars=T,shape=term~respon
              gof_omit=gof_omit_vector, output=here("tables/vote_concordance_middle_class_canada.html"))
 modelsummary(vote_concordance_upper_full_list, fmt=2, stars=T,shape=term~response+model,
              gof_omit=gof_omit_vector, output=here("tables/vote_concordance_upper_class_canada.html"))
+
+#### Model Conservative Vote Choice ####
+
+# mod_con_concordance_84<-glm(conservative~concordance, data=subset(ces, election=="1984"&obj_class2=="Working Class"), family="binomial")
+# mod_con_concordance_25<-glm(conservative~concordance, data=subset(ces, election=="2025"&obj_class2=="Working Class"), family="binomial")
+# levels(ces$conservative)
+# modelsummary(list(mod_con_concordance_84, mod_con_concordance_25), stars=T)
+
