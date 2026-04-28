@@ -175,20 +175,33 @@ ggsave(here("plots/effect_ownership_concordance.png"), width=10, height=6)
 #### Can we link this to vote at all?
 # What is the research question?
 # Is there a relationship between concordance and vote?
-mod1_vote_concordance_working_qc_84<-multinom(vote2~concordance, data=subset(ces_working_class,election==1984&quebec!=1))
-mod1_vote_concordance_working_roc_84<-multinom(vote2~concordance, data=subset(ces_working_class,election==1984&quebec==1))
-mod1_vote_concordance_working_qc_25<-multinom(vote2~concordance, data=subset(ces_working_class,election==2025&quebec!=1))
-mod1_vote_concordance_working_roc_25<-multinom(vote2~concordance, data=subset(ces_working_class,election==2025&quebec==1))
+mod1_vote_concordance_working_qc_84<-multinom(vote2~concordance, data=subset(ces_working_class,election==1984&quebec==1))
+mod1_vote_concordance_working_roc_84<-multinom(vote2~concordance, data=subset(ces_working_class,election==1984&quebec!=1))
+mod1_vote_concordance_working_qc_25<-multinom(vote2~concordance, data=subset(ces_working_class,election==2025&quebec==1))
+mod1_vote_concordance_working_roc_25<-multinom(vote2~concordance, data=subset(ces_working_class,election==2025&quebec!=1))
+mod1_vote_concordance_working_84<-multinom(vote2~concordance, data=subset(ces_working_class,election==1984))
+mod1_vote_concordance_working_25<-multinom(vote2~concordance, data=subset(ces_working_class,election==2025))
+mod1_vote_concordance_working_84_controls<-update(mod1_vote_concordance_working_84, .~.+own_rent+income_tertile+degree)
+mod1_vote_concordance_working_25_controls<-update(mod1_vote_concordance_working_25, .~.+own_rent+income_tertile+degree)
 
-mod1_vote_concordance_upper_qc_84<-multinom(vote2~concordance, data=subset(ces_upper_class,election==1984&quebec!=1))
-mod1_vote_concordance_upper_roc_84<-multinom(vote2~concordance, data=subset(ces_upper_class,election==1984&quebec==1))
-mod1_vote_concordance_upper_qc_25<-multinom(vote2~concordance, data=subset(ces_upper_class,election==2025&quebec!=1))
-mod1_vote_concordance_upper_roc_25<-multinom(vote2~concordance, data=subset(ces_upper_class,election==2025&quebec==1))
+mod1_vote_concordance_upper_qc_84<-multinom(vote2~concordance, data=subset(ces_upper_class,election==1984&quebec==1))
+mod1_vote_concordance_upper_roc_84<-multinom(vote2~concordance, data=subset(ces_upper_class,election==1984&quebec!=1))
+mod1_vote_concordance_upper_qc_25<-multinom(vote2~concordance, data=subset(ces_upper_class,election==2025&quebec==1))
+mod1_vote_concordance_upper_roc_25<-multinom(vote2~concordance, data=subset(ces_upper_class,election==2025&quebec!=1))
+mod1_vote_concordance_upper_84<-multinom(vote2~concordance, data=subset(ces_upper_class,election==1984))
+mod1_vote_concordance_upper_25<-multinom(vote2~concordance, data=subset(ces_upper_class,election==2025))
+mod1_vote_concordance_upper_84_controls<-update(mod1_vote_concordance_upper_84, .~.+own_rent+income_tertile+degree)
+mod1_vote_concordance_upper_25_controls<-update(mod1_vote_concordance_upper_25, .~.+own_rent+income_tertile+degree)
 
-mod1_vote_concordance_middle_qc_84<-multinom(vote2~concordance, data=subset(ces_middle_class,election==1984&quebec!=1))
-mod1_vote_concordance_middle_roc_84<-multinom(vote2~concordance, data=subset(ces_middle_class,election==1984&quebec==1))
-mod1_vote_concordance_middle_qc_25<-multinom(vote2~concordance, data=subset(ces_middle_class,election==2025&quebec!=1))
-mod1_vote_concordance_middle_roc_25<-multinom(vote2~concordance, data=subset(ces_middle_class,election==2025&quebec==1))
+mod1_vote_concordance_middle_qc_84<-multinom(vote2~concordance, data=subset(ces_middle_class,election==1984&quebec==1))
+mod1_vote_concordance_middle_roc_84<-multinom(vote2~concordance, data=subset(ces_middle_class,election==1984&quebec!=1))
+mod1_vote_concordance_middle_qc_25<-multinom(vote2~concordance, data=subset(ces_middle_class,election==2025&quebec==1))
+mod1_vote_concordance_middle_roc_25<-multinom(vote2~concordance, data=subset(ces_middle_class,election==2025&quebec!=1))
+mod1_vote_concordance_middle_84<-multinom(vote2~concordance, data=subset(ces_middle_class,election==1984))
+mod1_vote_concordance_middle_25<-multinom(vote2~concordance, data=subset(ces_middle_class,election==2025))
+mod1_vote_concordance_middle_84_controls<-update(mod1_vote_concordance_middle_84, .~.+own_rent+income_tertile+degree)
+mod1_vote_concordance_middle_25_controls<-update(mod1_vote_concordance_middle_25, .~.+own_rent+income_tertile+degree)
+
 
 # model1_concordance_vote_25_roc<-multinom(vote2~concordance, data=subset(ces,election==2025&quebec!=1))
 # model1_concordance_vote_25_qc<-multinom(vote2~concordance, data=subset(ces,election==2025&quebec==1))
@@ -210,23 +223,56 @@ vote_concordance_upper_list<-list("QC 1984"=mod1_vote_concordance_upper_qc_84,
 )
 names(vote_concordance_middle_list)
 modelsummary(vote_concordance_working_list, fmt=2, stars=T,shape=term~response+model,
-             gof_omit=gof_omit_vector)
+             gof_omit=gof_omit_vector, output=here("tables/vote_concordance_working_class.html"))
 modelsummary(vote_concordance_middle_list, fmt=2, stars=T,shape=term~response+model,
-             gof_omit=gof_omit_vector)
+             gof_omit=gof_omit_vector, output=here("tables/vote_concordance_middle_class.html"))
 modelsummary(vote_concordance_upper_list, fmt=2, stars=T,shape=term~response+model,
-             gof_omit=gof_omit_vector)
-# #these models break out the material classes to see how class concordance interacts with vote ces$occupation_oesch_5
-# model1a_concordance_vote_84_roc<-update(model1_concordance_vote_84_roc, .~., data=subset(ces,election==1984&quebec!=1&occupation_oesch_5=="Unskilled workers"))
-# model1b_concordance_vote_84_roc<-update(model1_concordance_vote_84_roc, .~., data=subset(ces,election==1984&quebec!=1&occupation_oesch_5=="Skilled workers"))
-# model1c_concordance_vote_84_roc<-update(model1_concordance_vote_84_roc, .~., data=subset(ces,election==1984&quebec!=1&occupation_oesch_5=="Lower-grade service"))
-# model1d_concordance_vote_84_roc<-update(model1_concordance_vote_84_roc, .~., data=subset(ces,election==1984&quebec!=1&occupation_oesch_5=="Higher-grade service"))
-# #these models break out the material classes to see how class concordance interacts with vote ces$occupation_oesch_5
-# model1a_concordance_vote_25_roc<-update(model1_concordance_vote_25_roc, .~., data=subset(ces,election==2025&quebec!=1&occupation_oesch_5=="Unskilled workers"))
-# model1b_concordance_vote_25_roc<-update(model1_concordance_vote_25_roc, .~., data=subset(ces,election==2025&quebec!=1&occupation_oesch_5=="Skilled workers"))
-# model1c_concordance_vote_25_roc<-update(model1_concordance_vote_25_roc, .~., data=subset(ces,election==2025&quebec!=1&occupation_oesch_5=="Lower-grade service"))
-# model1d_concordance_vote_25_roc<-update(model1_concordance_vote_25_roc, .~., data=subset(ces,election==2025&quebec!=1&occupation_oesch_5=="Higher-grade service"))
-#model1c_concordance_vote_25_roc<-update(model1_concordance_vote_25_roc, .~., data=subset(ces,election==2025&quebec!=1&occupation_oesch_5=="Self-employed"))
-# model1d_concordance_vote_25_roc<-update(model1_concordance_vote_25_roc, .~., data=subset(ces,election==2025&quebec!=1&occupation_oesch_5=="Professionals"))
-# model1e_concordance_vote_25_roc<-update(model1_concordance_vote_25_roc, .~., data=subset(ces,election==2025&quebec!=1&occupation_oesch_5=="Managers"))
+             gof_omit=gof_omit_vector, output=here("tables/vote_concordance_upper_class.html"))
+
+vote_concordance_working_list<-list("QC 1984"=mod1_vote_concordance_working_qc_84,
+                            "QC 2025"=mod1_vote_concordance_working_qc_25,
+                            "ROC 1984"=mod1_vote_concordance_working_roc_84,
+                            "ROC 2025"=mod1_vote_concordance_working_roc_25
+                            )
+names(vote_concordance_working_list)
+vote_concordance_middle_list<-list("QC 1984"=mod1_vote_concordance_middle_qc_84,
+                                    "QC 2025"=mod1_vote_concordance_middle_qc_25,
+                                    "ROC 1984"=mod1_vote_concordance_middle_roc_84,
+                                    "ROC 2025"=mod1_vote_concordance_middle_roc_25
+)
+vote_concordance_upper_list<-list("QC 1984"=mod1_vote_concordance_upper_qc_84,
+                                   "QC 2025"=mod1_vote_concordance_upper_qc_25,
+                                   "ROC 1984"=mod1_vote_concordance_upper_roc_84,
+                                   "ROC 2025"=mod1_vote_concordance_upper_roc_25
+)
+names(vote_concordance_middle_list)
+modelsummary(vote_concordance_working_list, fmt=2, stars=T,shape=term~response+model,
+             gof_omit=gof_omit_vector, output=here("tables/vote_concordance_working_class.html"))
+modelsummary(vote_concordance_middle_list, fmt=2, stars=T,shape=term~response+model,
+             gof_omit=gof_omit_vector, output=here("tables/vote_concordance_middle_class.html"))
+modelsummary(vote_concordance_upper_list, fmt=2, stars=T,shape=term~response+model,
+             gof_omit=gof_omit_vector, output=here("tables/vote_concordance_upper_class.html"))
 
 
+# Print model summaries of full Canada models
+
+vote_concordance_working_full_list<-list("1984"=mod1_vote_concordance_working_84,
+                                         "1984 with controls"=mod1_vote_concordance_working_84_controls ,
+                                         "2025"=mod1_vote_concordance_working_25,
+                                         "2025 with controls"=mod1_vote_concordance_working_25_controls)
+vote_concordance_middle_full_list<-list("1984"=mod1_vote_concordance_middle_84,
+                                         "1984 with controls"=mod1_vote_concordance_middle_84_controls ,
+                                         "2025"=mod1_vote_concordance_middle_25,
+                                         "2025 with controls"=mod1_vote_concordance_middle_25_controls)
+vote_concordance_upper_full_list<-list("1984"=mod1_vote_concordance_upper_84,
+                                         "1984 with controls"=mod1_vote_concordance_upper_84_controls ,
+                                         "2025"=mod1_vote_concordance_upper_25,
+                                         "2025 with controls"=mod1_vote_concordance_upper_25_controls)
+
+
+modelsummary(vote_concordance_working_full_list, fmt=2, stars=T,shape=term~response+model,
+             gof_omit=gof_omit_vector, output=here("tables/vote_concordance_working_class_canada.html"))
+modelsummary(vote_concordance_middle_full_list, fmt=2, stars=T,shape=term~response+model,
+             gof_omit=gof_omit_vector, output=here("tables/vote_concordance_middle_class_canada.html"))
+modelsummary(vote_concordance_upper_full_list, fmt=2, stars=T,shape=term~response+model,
+             gof_omit=gof_omit_vector, output=here("tables/vote_concordance_upper_class_canada.html"))
